@@ -1,0 +1,57 @@
+---
+title: "Final Project"
+author: "Delaney Norman"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+# Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data
+
+data = read.csv("/Users/delracman/Downloads/Walmart.csv") %>% 
+  mutate(
+    Date=as.Date(Date,format="%d-%m-%Y"),
+    Year=year(Date),
+    Month=month(Date),
+    Day=day(Date),
+    Week=week(Date)
+  ) %>% 
+  arrange(Date)
+head(data)
+
+# Holidays include: Super Bowl, Thanksgiving, Christmas, Labor Day
+# Consider modifying to include 4th of July, Valentine's Day, Halloween, etc.
+# Example shown for Halloween below
+head(
+  data %>%
+    mutate(
+      Holiday_Flag = case_when(
+        between(
+          as.numeric(as.Date(
+            paste(as.character(Year),"-10-31",sep=""),
+            format="%Y-%m-%d"
+          )-Date), 0, 7
+        )~1,
+        .default=Holiday_Flag
+      )
+    ) %>%
+    filter(Month==10, Day > 23)
+)
+```
+### Average Sales Per Week Across All Stores
+```{r, message=FALSE}
+# Think about way to replace axis labels with months instead of weeks 
+# (since beginning of the week corresponding with each number changes each year)
+data %>% 
+  group_by(Year,Week) %>% 
+  summarize(avgsales=mean(Weekly_Sales)) %>% 
+  ggplot() + 
+    geom_line(aes(x=Week,y=avgsales,color=factor(Year))) +
+    labs(x="Week Number",y="Average Weekly Sales",title="Average Weekly Sales Per Year Across All Stores")
+```
+
