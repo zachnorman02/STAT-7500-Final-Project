@@ -47,11 +47,70 @@ head(
 ```{r, message=FALSE}
 # Think about way to replace axis labels with months instead of weeks 
 # (since beginning of the week corresponding with each number changes each year)
-data %>% 
+avgsales = data %>% 
   group_by(Year,Week) %>% 
-  summarize(avgsales=mean(Weekly_Sales)) %>% 
+  summarize(avgsales=mean(Weekly_Sales))
+avgsales %>% 
   ggplot() + 
     geom_line(aes(x=Week,y=avgsales,color=factor(Year))) +
     labs(x="Week Number",y="Average Weekly Sales",title="Average Weekly Sales Per Year Across All Stores")
+```
+
+```{r}
+data %>% 
+  ggplot()+geom_point(aes(x=Temperature,y=Weekly_Sales,color=factor(Store)))
+```
+
+```{r}
+data %>% 
+  ggplot()+geom_point(aes(x=Fuel_Price,y=Weekly_Sales,color=factor(Store)))
+```
+
+```{r}
+data %>% 
+  ggplot()+geom_point(aes(x=CPI,y=Weekly_Sales,color=factor(Store)))
+```
+```{r}
+roundedData = data %>% 
+  mutate(
+    RoundedTemp=round(Temperature,digits=-1),
+    RoundedCPI=round(CPI,digits=-1),
+    RoundedFuel=round(Fuel_Price,digits=1),
+    RoundedUnemployment=round(Unemployment,digits=1)
+  )
+
+roundedData %>%
+  group_by(RoundedTemp) %>% 
+  summarize(AvgSales=mean(Weekly_Sales)) %>% 
+  ggplot(aes(x=RoundedTemp,y=AvgSales)) + geom_bar(stat = "identity")
+```
+
+
+```{r}
+roundedData %>%
+  group_by(RoundedCPI) %>% 
+  summarize(AvgSales=mean(Weekly_Sales)) %>% 
+  ggplot(aes(x=RoundedCPI,y=AvgSales)) + geom_bar(stat = "identity")
+```
+
+```{r}
+roundedData %>%
+  group_by(RoundedFuel) %>% 
+  summarize(AvgSales=mean(Weekly_Sales)) %>% 
+  ggplot(aes(x=RoundedFuel,y=AvgSales)) + geom_bar(stat = "identity")
+```
+
+```{r}
+roundedData %>%
+  group_by(RoundedUnemployment) %>% 
+  summarize(AvgSales=mean(Weekly_Sales)) %>% 
+  ggplot(aes(x=RoundedUnemployment,y=AvgSales)) + geom_bar(stat = "identity")
+```
+
+```{r}
+data %>% 
+  group_by(Store) %>% 
+  summarize(CPI=mean(CPI),Unemployment=mean(Unemployment),Fuel_Price=mean(Fuel_Price),Weekly_Sales=mean(Weekly_Sales)) %>% 
+  arrange(desc(Weekly_Sales))
 ```
 
