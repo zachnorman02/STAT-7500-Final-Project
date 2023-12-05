@@ -10,163 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-# Importing the dataset
-
-The data is from Kaggle and includes <copy from project proposal>
-
-```{r}
-# Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data
-
-store_data = read.csv("/Users/delracman/Documents/STAT 7500/Project/Walmart.csv") %>% 
-  mutate(
-    Date=as.Date(Date,format="%d-%m-%Y"),
-    Year=year(Date),
-    Month=month(Date),
-    Day=day(Date),
-    Week=week(Date)
-  ) %>% 
-  arrange(Date)
-head(store_data)
-```
-
-# Sales Per Week Across All Stores
-
-There are peaks at similar times each year.
-
-```{r, message=FALSE}
-store_data_sales = store_data %>% 
-  group_by(Date) %>% 
-  summarize(Total_Sales=sum(Weekly_Sales)) 
-
-max_total = max(store_data_sales$Total_Sales)
-
-store_data_sales %>% 
-  ggplot() + 
-    geom_line(aes(x=Date,y=Total_Sales)) +
-    labs(title="Total Sales Each Week") +
-    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
-                                                 to = as.Date("2012-12-31"), 
-                                                 by = "4 months")) +
-    ylim(0, max_total)
-```
-
-```{r}
-# Think about way to replace axis labels with months instead of weeks 
-# (since beginning of the week corresponding with each number changes each year)
-avgsales = store_data %>% 
-  group_by(Year,Week) %>% 
-  mutate(
-    avgsales=mean(Weekly_Sales),
-    scaled=avgsales/100000,
-    plot_date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
-  )
-
-max_sales = max(avgsales$scaled)
-
-avgsales %>% 
-  ggplot() + 
-    geom_line(aes(x=Week,y=scaled,color=factor(Year))) +
-    labs(
-      x="Week Number",
-      y="Average Weekly Sales (in hundreds of thousands)",
-      title="Average Weekly Sales Per Year Across All Stores"
-    ) +
-    scale_x_continuous(breaks = seq(1,53,by=4)) +
-    ylim(0, max_sales)
-
-avgsales %>% 
-  ggplot() + 
-    geom_line(aes(x=plot_date,y=scaled,color=factor(Year))) + 
-    labs(
-        x="Month-Day",
-        y="Average Weekly Sales (in hundreds of thousands)",
-        title="Average Weekly Sales Per Year Across All Stores"
-      ) +
-    scale_x_date(date_labels="%m-%d") +
-    ylim(0, max_sales)
-```
-
-```{r}
-
-# Add other holidays to the store_data. Flag with "2" to differentiate from pre-existing holidays in the store_dataset
-# Observation: dates are for end of week, not beginning of week (so take date and check week previous, not week after)
-# Also vectorized to be able to use with ifelse
-holidays = c(
-  "2010-05-31", "2011-05-30", "2012-05-28",
-  "2010-04-04", "2011-04-24", "2012-04-08",
-  "2010-10-31", "2011-10-31", "2012-10-31",
-  "2010-07-04", "2011-07-04", "2012-07-04",
-  "2010-02-14", "2011-02-14", "2012-02-14"
-)
-determine_holiday = function(day) {
-  for (holiday in holidays) {
-    if(between(as.numeric(as.Date(holiday,format="%Y-%m-%d")-day), -6, 0)) {
-      return(TRUE)
-    }
-  }
-  return(FALSE)
-}
-
-# Allows determine_holiday to take in one date at a time in the ifelse
-determine_holiday_vectorized <- Vectorize(determine_holiday)
-
-store_data_with_holidays = store_data %>%
-  mutate(
-    Holiday_Flag = ifelse(Holiday_Flag==0, ifelse(determine_holiday_vectorized(Date),2,Holiday_Flag),Holiday_Flag)
-  )
-
-head(store_data_with_holidays %>% filter(Holiday_Flag==2))
-
-store_data_with_holidays %>% 
-  group_by(Date) %>% 
-  mutate(Total_Sales=sum(Weekly_Sales)) %>% 
-  ggplot() + 
-    geom_line(aes(x=Date,y=Total_Sales, color=factor(Holiday_Flag), group=1)) +
-    labs(title="Total Sales Each Week", color="Holiday") +
-    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
-                                                 to = as.Date("2012-12-31"), 
-                                                 by = "4 months"))
-
-# store_data_with_holidays %>% filter(Date >= "2010-12-01")
-```
-
 ```{r}
 # 6, 14, 23, 27, 40, 45, 47, 48, 49, 51, 52
 store_data_with_holidays %>% 
-  filter(Week %in% c(6,14,23,27,40,45,47,48,49,51,52) | Holiday_Flag %in% c(1,2)) %>% 
-  select(Date,Week,Holiday_Flag) %>% 
-  unique() %>% 
-  select(Date,Week,Holiday_Flag)
+  filter(Week %in% c(6,14,23,27,40,45,47,48,49,51,52)) %>% 
+  left_join(holidays %>% select(-Holiday_Flag), by="Date") %>% 
+  select(Date, Holiday_Flag, Next_Week_Holiday) %>% 
+  unique()
 
 # https://search.r-project.org/CRAN/refmans/IDPmisc/html/peaks.html
-```
-
-```{r}
-store_data %>% 
-  ggplot() +
-    geom_point(aes(x=Temperature,y=Weekly_Sales,color=factor(Store))) +
-    theme(legend.position = "none")
-```
-
-```{r}
-store_data %>% 
-  ggplot() +
-    geom_point(aes(x=Fuel_Price,y=Weekly_Sales,color=factor(Store))) +
-    theme(legend.position = "none")
-```
-
-```{r}
-store_data %>% 
-  ggplot() +
-    geom_point(aes(x=CPI,y=Weekly_Sales,color=factor(Store))) +
-    theme(legend.position = "none")
-```
-
-```{r}
-store_data %>% 
-  ggplot() +
-    geom_point(aes(x=Unemployment,y=Weekly_Sales,color=factor(Store))) +
-    theme(legend.position = "none")
 ```
 
 ```{r}
@@ -337,3 +189,31 @@ rounded_percentage_sales %>%
     geom_smooth(method="lm", aes(color="red")) +
     theme(legend.position = "none")
 ```
+
+
+```{r}
+store_data %>% 
+  select(Unemployment) %>% 
+  arrange(desc(Unemployment)) %>% 
+  round() %>% 
+  distinct()
+
+store_data %>% 
+  mutate(rate_category = case_when(
+    Unemployment <= 6~"Low",
+    Unemployment <= 10~"Medium",
+    .default="High")
+  ) %>% 
+  ggplot() + geom_boxplot(aes(x=rate_category,y=Weekly_Sales))
+
+store_data %>% 
+  ggplot() +
+    geom_line(aes(x=Date,y=Unemployment, color=factor(Store))) +
+    theme(legend.position = "none")
+```
+
+```{r}
+# seasons
+
+```
+

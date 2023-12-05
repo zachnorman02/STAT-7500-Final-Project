@@ -1,0 +1,227 @@
+---
+title: "Final Project Report"
+subtitle: "Delaney Norman"
+date: "`r Sys.Date()`"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Importing the Dataset
+
+<copy from proposal>
+
+```{r}
+# Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data
+
+store_data = read.csv(
+  "/Users/delracman/Documents/STAT 7500/Project/Walmart.csv"
+) %>% 
+  mutate(
+    Date=as.Date(Date,format="%d-%m-%Y"),
+    Year=year(Date),
+    Month=month(Date),
+    Day=day(Date),
+    Week=week(Date)
+  ) %>% 
+  arrange(Date)
+head(store_data)
+```
+
+# Total Sales Data
+```{r}
+store_data_sales = store_data %>% 
+  group_by(Date) %>% 
+  summarize(Total_Sales=sum(Weekly_Sales)) 
+
+store_data_sales %>% 
+  ggplot() + 
+    geom_line(aes(x=Date,y=Total_Sales)) +
+    labs(title="Total Sales Each Week (in millions)") +
+    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
+                                                 to = as.Date("2012-12-31"), 
+                                                 by = "4 months")
+                                              ) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+```
+
+```{r}
+store_data %>% 
+  group_by(Store) %>% 
+  summarize(Total_Store_Sales=sum(Weekly_Sales)) %>% 
+  arrange(desc(Total_Store_Sales))
+```
+
+```{r, message=F}
+store_data %>% 
+  group_by(Store, Year) %>% 
+  summarize(Total_Store_Sales=sum(Weekly_Sales)) %>% 
+  arrange(desc(Total_Store_Sales)) %>% 
+  ggplot() + 
+    geom_bar(
+      aes(x=factor(Store), y=Total_Store_Sales, fill=factor(Year)), 
+      stat = "identity"
+    ) +
+    scale_x_discrete(breaks=seq(1,45,by=3)) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    ) + 
+    labs(
+      title="Total Sales For Each Store By Year", 
+      x="Store", 
+      y="Total Sales (in millions)"
+    )
+  
+```
+
+```{r}
+avgsales = store_data %>% 
+  group_by(Year,Week) %>% 
+  mutate(
+    Average_Sales=mean(Weekly_Sales),
+    Plot_Date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
+  )
+
+avgsales %>% 
+  ggplot() + 
+    geom_line(aes(x=Week,y=Average_Sales,color=factor(Year))) +
+    labs(
+      x="Week Number",
+      y="Average Weekly Sales (in hundreds of thousands)",
+      title="Average Weekly Sales Per Year Across All Stores"
+    ) +
+    scale_x_continuous(breaks = seq(1,53,by=4)) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/100000), 
+      limits=c(0,NA)
+    )
+
+avgsales %>% 
+  ggplot() + 
+    geom_line(aes(x=Plot_Date,y=Average_Sales,color=factor(Year))) + 
+    labs(
+        x="Month-Day",
+        y="Average Weekly Sales (in hundreds of thousands)",
+        title="Average Weekly Sales Per Year Across All Stores"
+      ) +
+    scale_x_date(
+      breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
+                                                 to = as.Date("2014-01-01"), 
+                                                 by = "1 month"),
+      date_labels="%m-%d"
+    ) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/100000), 
+      limits=c(0,NA)
+    )
+```
+
+# Holidays
+
+## Adding additional holidays
+```{r}
+# Add other holidays to the store_data. 
+# Flag with "2" to differentiate from pre-existing holidays in the store_dataset
+# Observation: dates are for end of week, not beginning of week 
+# (so take date and check week previous, not week after)
+# Also vectorized to be able to use with ifelse
+holidays = c(
+  "2010-05-31", "2011-05-30", "2012-05-28", # Memorial Day
+  "2010-04-04", "2011-04-24", "2012-04-08", # Easter
+  "2010-10-31", "2011-10-31", "2012-10-31", # Halloween
+  "2010-07-04", "2011-07-04", "2012-07-04", # 4th of July
+  "2010-02-14", "2011-02-14", "2012-02-14"  # Valentine's Day
+)
+determine_holiday = function(day) {
+  for (holiday in holidays) {
+    if(between(as.numeric(as.Date(holiday,format="%Y-%m-%d")-day), -6, 0)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+# Allows determine_holiday to take in one date at a time in the ifelse
+determine_holiday_vectorized <- Vectorize(determine_holiday)
+
+store_data_with_holidays = store_data %>%
+  mutate(
+    Holiday_Flag = ifelse(
+      Holiday_Flag==0, 
+      ifelse(
+        determine_holiday_vectorized(Date),
+        2,
+        Holiday_Flag
+      ),
+      Holiday_Flag
+    )
+  )
+```
+
+## Looking at holiday impact
+
+```{r}
+holidays = store_data_with_holidays %>% 
+  select(Date, Holiday_Flag) %>% 
+  distinct() %>% 
+  mutate(Next_Week_Holiday = lead(Holiday_Flag, default = 0))
+
+store_data_with_holidays %>% 
+  group_by(Date) %>% 
+  mutate(
+    Total_Sales=sum(Weekly_Sales),
+  ) %>% 
+  left_join(holidays %>% select(-Holiday_Flag), by="Date") %>% 
+  ggplot() + 
+    geom_line(
+      aes(
+        x=Date,
+        y=Total_Sales, 
+        color=factor(Next_Week_Holiday), 
+        group=1
+      )
+    ) +
+    labs(
+      title="Total Sales Each Week", 
+      color="Holiday", 
+      y="Total Sales (in millions)"
+    ) +
+    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
+                                                 to = as.Date("2012-12-31"), 
+                                                 by = "6 months")) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+```
+
+# Looking at other factors
+```{r}
+for (col in c("Unemployment", "CPI", "Fuel_Price", "Temperature")) {
+  label = str_replace_all(col, "_", " ")
+  print(
+    store_data %>% 
+      ggplot() +
+        geom_point(aes_string(x=col,y="Weekly_Sales",color="factor(Store)")) +
+        labs(
+          title=paste0(label," vs Weekly Sales for Each Store"), 
+          x=label, 
+          y="Weekly Sales (in millions)"
+        ) +
+        theme(legend.position = "none") +
+        scale_y_continuous(
+          labels = scales::number_format(scale = 1/1000000), 
+          limits=c(0,NA)
+      )
+  )
+}
+```
+
+# Conclusion
