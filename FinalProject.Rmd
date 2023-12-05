@@ -10,10 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+# Importing the dataset
+
+The data is from Kaggle and includes <copy from project proposal>
+
 ```{r}
 # Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data
 
-data = read.csv("/Users/delracman/Downloads/Walmart.csv") %>% 
+store_data = read.csv("/Users/delracman/Documents/STAT 7500/Project/Walmart.csv") %>% 
   mutate(
     Date=as.Date(Date,format="%d-%m-%Y"),
     Year=year(Date),
@@ -22,56 +26,151 @@ data = read.csv("/Users/delracman/Downloads/Walmart.csv") %>%
     Week=week(Date)
   ) %>% 
   arrange(Date)
-head(data)
-
-# Holidays include: Super Bowl, Thanksgiving, Christmas, Labor Day
-# Consider modifying to include 4th of July, Valentine's Day, Halloween, etc.
-# Example shown for Halloween below
-head(
-  data %>%
-    mutate(
-      Holiday_Flag = case_when(
-        between(
-          as.numeric(as.Date(
-            paste(as.character(Year),"-10-31",sep=""),
-            format="%Y-%m-%d"
-          )-Date), 0, 7
-        )~1,
-        .default=Holiday_Flag
-      )
-    ) %>%
-    filter(Month==10, Day > 23)
-)
+head(store_data)
 ```
-### Average Sales Per Week Across All Stores
+
+# Sales Per Week Across All Stores
+
+There are peaks at similar times each year.
+
 ```{r, message=FALSE}
+store_data_sales = store_data %>% 
+  group_by(Date) %>% 
+  summarize(Total_Sales=sum(Weekly_Sales)) 
+
+max_total = max(store_data_sales$Total_Sales)
+
+store_data_sales %>% 
+  ggplot() + 
+    geom_line(aes(x=Date,y=Total_Sales)) +
+    labs(title="Total Sales Each Week") +
+    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
+                                                 to = as.Date("2012-12-31"), 
+                                                 by = "4 months")) +
+    ylim(0, max_total)
+```
+
+```{r}
 # Think about way to replace axis labels with months instead of weeks 
 # (since beginning of the week corresponding with each number changes each year)
-avgsales = data %>% 
+avgsales = store_data %>% 
   group_by(Year,Week) %>% 
-  summarize(avgsales=mean(Weekly_Sales))
+  mutate(
+    avgsales=mean(Weekly_Sales),
+    scaled=avgsales/100000,
+    plot_date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
+  )
+
+max_sales = max(avgsales$scaled)
+
 avgsales %>% 
   ggplot() + 
-    geom_line(aes(x=Week,y=avgsales,color=factor(Year))) +
-    labs(x="Week Number",y="Average Weekly Sales",title="Average Weekly Sales Per Year Across All Stores")
+    geom_line(aes(x=Week,y=scaled,color=factor(Year))) +
+    labs(
+      x="Week Number",
+      y="Average Weekly Sales (in hundreds of thousands)",
+      title="Average Weekly Sales Per Year Across All Stores"
+    ) +
+    scale_x_continuous(breaks = seq(1,53,by=4)) +
+    ylim(0, max_sales)
+
+avgsales %>% 
+  ggplot() + 
+    geom_line(aes(x=plot_date,y=scaled,color=factor(Year))) + 
+    labs(
+        x="Month-Day",
+        y="Average Weekly Sales (in hundreds of thousands)",
+        title="Average Weekly Sales Per Year Across All Stores"
+      ) +
+    scale_x_date(date_labels="%m-%d") +
+    ylim(0, max_sales)
 ```
 
 ```{r}
-data %>% 
-  ggplot()+geom_point(aes(x=Temperature,y=Weekly_Sales,color=factor(Store)))
+
+# Add other holidays to the store_data. Flag with "2" to differentiate from pre-existing holidays in the store_dataset
+# Observation: dates are for end of week, not beginning of week (so take date and check week previous, not week after)
+# Also vectorized to be able to use with ifelse
+holidays = c(
+  "2010-05-31", "2011-05-30", "2012-05-28",
+  "2010-04-04", "2011-04-24", "2012-04-08",
+  "2010-10-31", "2011-10-31", "2012-10-31",
+  "2010-07-04", "2011-07-04", "2012-07-04",
+  "2010-02-14", "2011-02-14", "2012-02-14"
+)
+determine_holiday = function(day) {
+  for (holiday in holidays) {
+    if(between(as.numeric(as.Date(holiday,format="%Y-%m-%d")-day), -6, 0)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+# Allows determine_holiday to take in one date at a time in the ifelse
+determine_holiday_vectorized <- Vectorize(determine_holiday)
+
+store_data_with_holidays = store_data %>%
+  mutate(
+    Holiday_Flag = ifelse(Holiday_Flag==0, ifelse(determine_holiday_vectorized(Date),2,Holiday_Flag),Holiday_Flag)
+  )
+
+head(store_data_with_holidays %>% filter(Holiday_Flag==2))
+
+store_data_with_holidays %>% 
+  group_by(Date) %>% 
+  mutate(Total_Sales=sum(Weekly_Sales)) %>% 
+  ggplot() + 
+    geom_line(aes(x=Date,y=Total_Sales, color=factor(Holiday_Flag), group=1)) +
+    labs(title="Total Sales Each Week", color="Holiday") +
+    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
+                                                 to = as.Date("2012-12-31"), 
+                                                 by = "4 months"))
+
+# store_data_with_holidays %>% filter(Date >= "2010-12-01")
 ```
 
 ```{r}
-data %>% 
-  ggplot()+geom_point(aes(x=Fuel_Price,y=Weekly_Sales,color=factor(Store)))
+# 6, 14, 23, 27, 40, 45, 47, 48, 49, 51, 52
+store_data_with_holidays %>% 
+  filter(Week %in% c(6,14,23,27,40,45,47,48,49,51,52) | Holiday_Flag %in% c(1,2)) %>% 
+  select(Date,Week,Holiday_Flag) %>% 
+  unique() %>% 
+  select(Date,Week,Holiday_Flag)
+
+# https://search.r-project.org/CRAN/refmans/IDPmisc/html/peaks.html
 ```
 
 ```{r}
-data %>% 
-  ggplot()+geom_point(aes(x=CPI,y=Weekly_Sales,color=factor(Store)))
+store_data %>% 
+  ggplot() +
+    geom_point(aes(x=Temperature,y=Weekly_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
 ```
+
 ```{r}
-roundedData = data %>% 
+store_data %>% 
+  ggplot() +
+    geom_point(aes(x=Fuel_Price,y=Weekly_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+```
+
+```{r}
+store_data %>% 
+  ggplot() +
+    geom_point(aes(x=CPI,y=Weekly_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+```
+
+```{r}
+store_data %>% 
+  ggplot() +
+    geom_point(aes(x=Unemployment,y=Weekly_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+```
+
+```{r}
+roundedstore_data = store_data %>% 
   mutate(
     RoundedTemp=round(Temperature,digits=-1),
     RoundedCPI=round(CPI,digits=-1),
@@ -79,38 +178,162 @@ roundedData = data %>%
     RoundedUnemployment=round(Unemployment,digits=1)
   )
 
-roundedData %>%
+roundedstore_data %>%
+  group_by(Store) %>% 
+  ggplot(aes(x=Store,y=Weekly_Sales)) + geom_point(aes(color=factor(RoundedTemp)))
+
+roundedstore_data %>%
+  group_by(Store) %>% 
+  ggplot(aes(x=RoundedTemp,y=Weekly_Sales)) + 
+    geom_point(aes(color=factor(Store))) +
+    theme(legend.position = "none")
+
+roundedstore_data %>%
   group_by(RoundedTemp) %>% 
   summarize(AvgSales=mean(Weekly_Sales)) %>% 
   ggplot(aes(x=RoundedTemp,y=AvgSales)) + geom_bar(stat = "identity")
 ```
 
-
 ```{r}
-roundedData %>%
+roundedstore_data %>%
   group_by(RoundedCPI) %>% 
   summarize(AvgSales=mean(Weekly_Sales)) %>% 
   ggplot(aes(x=RoundedCPI,y=AvgSales)) + geom_bar(stat = "identity")
 ```
 
 ```{r}
-roundedData %>%
+roundedstore_data %>%
   group_by(RoundedFuel) %>% 
   summarize(AvgSales=mean(Weekly_Sales)) %>% 
   ggplot(aes(x=RoundedFuel,y=AvgSales)) + geom_bar(stat = "identity")
 ```
 
 ```{r}
-roundedData %>%
+roundedstore_data %>%
   group_by(RoundedUnemployment) %>% 
   summarize(AvgSales=mean(Weekly_Sales)) %>% 
-  ggplot(aes(x=RoundedUnemployment,y=AvgSales)) + geom_bar(stat = "identity")
+  ggplot(aes(x=RoundedUnemployment,y=AvgSales)) + 
+    geom_bar(stat = "identity") + 
+    geom_smooth(method="lm", aes(color="red")) +
+    theme(legend.position = "none")
 ```
 
 ```{r}
-data %>% 
+store_data %>% 
   group_by(Store) %>% 
   summarize(CPI=mean(CPI),Unemployment=mean(Unemployment),Fuel_Price=mean(Fuel_Price),Weekly_Sales=mean(Weekly_Sales)) %>% 
   arrange(desc(Weekly_Sales))
 ```
 
+```{r}
+store_data_with_holidays %>% 
+  group_by(Date) %>% 
+  ggplot(aes(x=Date,y=Weekly_Sales))+geom_point(aes(color=factor(Holiday_Flag)))
+
+store_data_with_holidays %>% 
+  group_by(Store) %>% 
+  ggplot(aes(x=factor(Store),y=Weekly_Sales))+geom_point(aes(color=factor(Holiday_Flag)))
+```
+
+```{r}
+rows = store_data %>% 
+  group_by(Store,Year) %>% 
+  summarize(n=n())
+
+high_low = store_data %>% 
+  left_join(rows,by=c('Store','Year')) %>% 
+  group_by(Store,Year) %>% 
+  mutate(rank=min_rank(-Weekly_Sales)) %>% 
+  filter(rank==1 | rank==n) %>% 
+  arrange(Store, n) %>% 
+  mutate(high=ifelse(rank==1,1,0))
+
+high_low %>% 
+  ggplot(aes(x=Date,y=Weekly_Sales)) + geom_point(aes(color=factor(high), shape=factor(Holiday_Flag))) +
+  labs(title="Date vs Weekly Sales to Show Most/Least Sales, Accounting for Holidays")
+```
+
+```{r}
+yearly_sales = store_data_with_holidays %>% 
+  group_by(Store, Year) %>% 
+  summarize(Yearly_Sales=sum(Weekly_Sales))
+  
+store_data_with_holidays = store_data_with_holidays %>% 
+  left_join(yearly_sales, by=c("Store","Year")) %>% 
+  mutate(Percentage_Sales=Weekly_Sales/Yearly_Sales)
+
+head(store_data_with_holidays)
+```
+
+```{r}
+percentage_sales = store_data_with_holidays %>% 
+  filter(Year != 2012)
+
+percentage_sales %>% 
+  ggplot() +
+    geom_point(aes(x=Temperature,y=Percentage_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+
+percentage_sales %>% 
+  ggplot() +
+    geom_point(aes(x=CPI,y=Percentage_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+
+percentage_sales %>% 
+  ggplot() +
+    geom_point(aes(x=Fuel_Price,y=Percentage_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+
+percentage_sales %>% 
+  ggplot() +
+    geom_point(aes(x=Unemployment,y=Percentage_Sales,color=factor(Store))) +
+    theme(legend.position = "none")
+
+percentage_sales %>% 
+  group_by(Store) %>% 
+  ggplot(aes(x=factor(Store),y=Percentage_Sales)) +
+    geom_point(aes(color=factor(Holiday_Flag))) +
+    scale_x_discrete(breaks = seq(1,45,by=5))
+```
+
+```{r}
+rounded_percentage_sales = percentage_sales %>% 
+  mutate(
+    RoundedTemp=round(Temperature,digits=-1),
+    RoundedCPI=round(CPI,digits=-1),
+    RoundedFuel=round(Fuel_Price,digits=1),
+    RoundedUnemployment=round(Unemployment,digits=1)
+  )
+
+rounded_percentage_sales %>%
+  group_by(RoundedUnemployment) %>% 
+  summarize(AvgSales=mean(Percentage_Sales)) %>% 
+  ggplot(aes(x=RoundedUnemployment,y=AvgSales)) + 
+    geom_bar(stat = "identity") + 
+    geom_smooth(method="lm", aes(color="red")) +
+    theme(legend.position = "none")
+
+rounded_percentage_sales %>%
+  group_by(RoundedTemp) %>% 
+  summarize(AvgSales=mean(Percentage_Sales)) %>% 
+  ggplot(aes(x=RoundedTemp,y=AvgSales)) + 
+    geom_bar(stat = "identity") + 
+    geom_smooth(method="lm", aes(color="red")) +
+    theme(legend.position = "none")
+
+rounded_percentage_sales %>%
+  group_by(RoundedCPI) %>% 
+  summarize(AvgSales=mean(Percentage_Sales)) %>% 
+  ggplot(aes(x=RoundedCPI,y=AvgSales)) + 
+    geom_bar(stat = "identity") + 
+    geom_smooth(method="lm", aes(color="red")) +
+    theme(legend.position = "none")
+
+rounded_percentage_sales %>%
+  group_by(RoundedFuel) %>% 
+  summarize(AvgSales=mean(Percentage_Sales)) %>% 
+  ggplot(aes(x=RoundedFuel,y=AvgSales)) + 
+    geom_bar(stat = "identity") + 
+    geom_smooth(method="lm", aes(color="red")) +
+    theme(legend.position = "none")
+```
