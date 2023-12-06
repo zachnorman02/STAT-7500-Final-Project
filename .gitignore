@@ -1,11 +1,5 @@
 *.png
 STAT 7500 Project Proposal.pdf
 Rplots.pdf
-*.css
-*.woff
-*.js
-*.html
-!FinalProjectReport.html
-!index.html
 .DS_Store
 *.DS_Store
