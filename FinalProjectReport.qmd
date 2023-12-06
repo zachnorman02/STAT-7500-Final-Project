@@ -397,4 +397,11 @@ plots[["RoundedTemp"]] +
   plot_layout(ncol = 2, nrow = 2)
 ```
 
+```{r}
+print(paste0("Temperature: ", stats::cor(store_data$Weekly_Sales,store_data$Temperature)))
+print(paste0("CPI: ", stats::cor(store_data$Weekly_Sales,store_data$CPI)))
+print(paste0("Unemployment: ", stats::cor(store_data$Weekly_Sales,store_data$Unemployment)))
+print(paste0("Fuel: ", stats::cor(store_data$Weekly_Sales,store_data$Fuel_Price)))
+```
+
 # Conclusion

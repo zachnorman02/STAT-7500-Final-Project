@@ -552,6 +552,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Temperature: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Temperature)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Temperature: -0.0638100131794695"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"CPI: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>CPI)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CPI: -0.0726341620401763"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Unemployment: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Unemployment)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Unemployment: -0.106176089657954"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Fuel: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Fuel_Price)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Fuel: 0.00946378631447514"</code></pre>
+</div>
+</div>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
