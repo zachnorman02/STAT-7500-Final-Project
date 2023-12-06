@@ -25,7 +25,8 @@ store_data = read.csv(
     Year=year(Date),
     Month=month(Date),
     Day=day(Date),
-    Week=week(Date)
+    Week=week(Date),
+    Plot_Date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
   ) %>% 
   arrange(Date)
 head(store_data)
@@ -40,7 +41,10 @@ store_data_sales = store_data %>%
 store_data_sales %>% 
   ggplot() + 
     geom_line(aes(x=Date,y=Total_Sales)) +
-    labs(title="Total Sales Each Week (in millions)") +
+    labs(
+      title="Total Sales Each Week",
+      y="Total Sales (in millions)"
+    ) +
     scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
                                                  to = as.Date("2012-12-31"), 
                                                  by = "4 months")
@@ -82,34 +86,34 @@ store_data %>%
 ```
 
 ```{r}
-avgsales = store_data %>% 
+sales = store_data %>% 
   group_by(Year,Week) %>% 
   mutate(
     Average_Sales=mean(Weekly_Sales),
-    Plot_Date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
+    Total_Sales=sum(Weekly_Sales)
   )
 
-avgsales %>% 
-  ggplot() + 
-    geom_line(aes(x=Week,y=Average_Sales,color=factor(Year))) +
-    labs(
-      x="Week Number",
-      y="Average Weekly Sales (in hundreds of thousands)",
-      title="Average Weekly Sales Per Year Across All Stores"
-    ) +
-    scale_x_continuous(breaks = seq(1,53,by=4)) +
-    scale_y_continuous(
-      labels = scales::number_format(scale = 1/100000), 
-      limits=c(0,NA)
-    )
+# sales %>% 
+#   ggplot() + 
+#     geom_line(aes(x=Week,y=Average_Sales,color=factor(Year))) +
+#     labs(
+#       x="Week Number",
+#       y="Average Weekly Sales (in hundreds of thousands)",
+#       title="Average Weekly Sales Per Year Across All Stores"
+#     ) +
+#     scale_x_continuous(breaks = seq(1,53,by=4)) +
+#     scale_y_continuous(
+#       labels = scales::number_format(scale = 1/100000), 
+#       limits=c(0,NA)
+#     )
 
-avgsales %>% 
+sales %>% 
   ggplot() + 
-    geom_line(aes(x=Plot_Date,y=Average_Sales,color=factor(Year))) + 
+    geom_line(aes(x=Plot_Date,y=Total_Sales,color=factor(Year))) + 
     labs(
         x="Month-Day",
-        y="Average Weekly Sales (in hundreds of thousands)",
-        title="Average Weekly Sales Per Year Across All Stores"
+        y="Total Weekly Sales (in millions)",
+        title="Total Weekly Sales Per Year Across All Stores"
       ) +
     scale_x_date(
       breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
@@ -118,7 +122,7 @@ avgsales %>%
       date_labels="%m-%d"
     ) +
     scale_y_continuous(
-      labels = scales::number_format(scale = 1/100000), 
+      labels = scales::number_format(scale = 1/1000000), 
       limits=c(0,NA)
     )
 ```
@@ -150,7 +154,6 @@ determine_holiday = function(day) {
 
 # Allows determine_holiday to take in one date at a time in the ifelse
 determine_holiday_vectorized <- Vectorize(determine_holiday)
-
 store_data_with_holidays = store_data %>%
   mutate(
     Holiday_Flag = ifelse(
@@ -171,14 +174,24 @@ store_data_with_holidays = store_data %>%
 holidays = store_data_with_holidays %>% 
   select(Date, Holiday_Flag) %>% 
   distinct() %>% 
-  mutate(Next_Week_Holiday = lead(Holiday_Flag, default = 0))
+  mutate(
+    Next_Week_Holiday = lead(
+      Holiday_Flag, default = 0
+    )
+  )
 
-store_data_with_holidays %>% 
+store_data_with_holidays = store_data_with_holidays %>% 
   group_by(Date) %>% 
   mutate(
     Total_Sales=sum(Weekly_Sales),
   ) %>% 
-  left_join(holidays %>% select(-Holiday_Flag), by="Date") %>% 
+  left_join(
+    holidays %>% 
+      select(-Holiday_Flag), 
+    by="Date"
+  ) 
+
+store_data_with_holidays %>% 
   ggplot() + 
     geom_line(
       aes(
@@ -201,6 +214,36 @@ store_data_with_holidays %>%
       limits=c(0,NA)
     )
 ```
+```{r}
+# store_data_with_holidays %>% 
+#   ggplot() + 
+#     geom_line(
+#       aes(
+#         x=Plot_Date,
+#         y=Total_Sales, 
+#         color=factor(Next_Week_Holiday), 
+#         group=1
+#       )
+#     ) +
+#     facet_wrap(~Year) +
+#     labs(
+#       title="Total Sales Each Week", 
+#       color="Holiday", 
+#       y="Total Sales (in millions)"
+#     ) +
+#     scale_x_date(
+#       breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
+#                                                  to = as.Date("2014-01-01"), 
+#                                                  by = "6 months"),
+#       date_labels="%m-%d"
+#     ) +
+#     scale_y_continuous(
+#       labels = scales::number_format(scale = 1/1000000), 
+#       limits=c(0,NA)
+#     ) +
+#     theme(axis.text.x = element_text(angle = -45, hjust=-0.25), aspect.ratio=1/1)
+```
+
 
 # Looking at other factors
 ```{r}
@@ -219,9 +262,43 @@ for (col in c("Unemployment", "CPI", "Fuel_Price", "Temperature")) {
         scale_y_continuous(
           labels = scales::number_format(scale = 1/1000000), 
           limits=c(0,NA)
-      )
+        )
   )
 }
 ```
+
+```{r, message=F}
+store_data %>% 
+  mutate(
+    Season=case_when(
+      Month %in% c(12,1,2) ~ "Winter",
+      Month %in% c(3:5) ~ "Spring",
+      Month %in% c(6:8) ~ "Summer",
+      .default = "Fall"
+    )
+  ) %>% 
+  group_by(Season, Year) %>% 
+  summarize(Total = sum(Weekly_Sales)) %>% 
+  ggplot() + 
+    geom_bar(aes(x=Season, y=Total, fill=factor(Year)), stat = "identity") +
+    labs(title="Total Sales by Season", y="Total Sales (in millions)") +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+```
+```{r}
+store_data_with_holidays %>% 
+  group_by(Holiday_Flag) %>% 
+  summarize(Total_Sales=mean(Weekly_Sales)) %>% 
+  ggplot() + 
+    geom_bar(aes(x=factor(Holiday_Flag), y=Total_Sales), stat = "identity") +
+    labs(title="Average Sales by Holiday", y="Average Sales (in millions)") +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+```
+
 
 # Conclusion
