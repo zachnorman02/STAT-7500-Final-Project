@@ -8,6 +8,7 @@ format: pdf
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(patchwork)
 ```
 
 # Importing the Dataset
@@ -33,6 +34,7 @@ head(store_data)
 ```
 
 # Total Sales Data
+
 ```{r}
 store_data_sales = store_data %>% 
   group_by(Date) %>% 
@@ -62,6 +64,25 @@ store_data %>%
   arrange(desc(Total_Store_Sales))
 ```
 
+```{r}
+store_data %>% 
+  ggplot() + 
+    geom_line(aes(x=Date,y=Weekly_Sales, color=factor(Store))) +
+    labs(
+      title="Total Sales Each Week",
+      y="Total Sales (in millions)"
+    ) +
+    scale_x_date(breaks = function(x) seq.Date(from = as.Date("2010-01-01"), 
+                                                 to = as.Date("2012-12-31"), 
+                                                 by = "4 months")
+                                              ) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    ) +
+    theme(legend.position = "none")
+```
+
 ```{r, message=F}
 store_data %>% 
   group_by(Store, Year) %>% 
@@ -80,7 +101,8 @@ store_data %>%
     labs(
       title="Total Sales For Each Store By Year", 
       x="Store", 
-      y="Total Sales (in millions)"
+      y="Total Sales (in millions)",
+      fill="Year"
     )
   
 ```
@@ -93,27 +115,14 @@ sales = store_data %>%
     Total_Sales=sum(Weekly_Sales)
   )
 
-# sales %>% 
-#   ggplot() + 
-#     geom_line(aes(x=Week,y=Average_Sales,color=factor(Year))) +
-#     labs(
-#       x="Week Number",
-#       y="Average Weekly Sales (in hundreds of thousands)",
-#       title="Average Weekly Sales Per Year Across All Stores"
-#     ) +
-#     scale_x_continuous(breaks = seq(1,53,by=4)) +
-#     scale_y_continuous(
-#       labels = scales::number_format(scale = 1/100000), 
-#       limits=c(0,NA)
-#     )
-
 sales %>% 
   ggplot() + 
     geom_line(aes(x=Plot_Date,y=Total_Sales,color=factor(Year))) + 
     labs(
         x="Month-Day",
         y="Total Weekly Sales (in millions)",
-        title="Total Weekly Sales Per Year Across All Stores"
+        title="Total Weekly Sales Per Year Across All Stores",
+        color="Year"
       ) +
     scale_x_date(
       breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
@@ -127,9 +136,45 @@ sales %>%
     )
 ```
 
+```{r, message=F}
+season_data = store_data %>% 
+  mutate(
+    Season=case_when(
+      Month %in% c(12,1,2) ~ "Winter",
+      Month %in% c(3:5) ~ "Spring",
+      Month %in% c(6:8) ~ "Summer",
+      .default = "Fall"
+    )
+  ) %>% 
+  group_by(Season, Year) %>% 
+  summarize(Total = sum(Weekly_Sales), Average=mean(Weekly_Sales)) 
+
+season_plots = list()
+
+season_plots[["total"]] = season_data %>% 
+  ggplot() + 
+    geom_bar(aes(x=Season, y=Total, fill=factor(Year)), stat = "identity") +
+    labs(title="Total Sales by Season", y="Total Sales (in millions)", fill="Year") +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+season_plots[["average"]] = season_data %>% 
+  ggplot() + 
+    geom_bar(aes(x=Season, y=Average, fill=factor(Year)), stat = "identity") +
+    labs(title="Average Sales by Season", y="Average Sales (in millions)", fill="Year") +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    )
+
+season_plots[["total"]] + season_plots[["average"]] + plot_layout(ncol = 2, nrow = 1)
+```
+
 # Holidays
 
 ## Adding additional holidays
+
 ```{r}
 # Add other holidays to the store_data. 
 # Flag with "2" to differentiate from pre-existing holidays in the store_dataset
@@ -137,6 +182,8 @@ sales %>%
 # (so take date and check week previous, not week after)
 # Also vectorized to be able to use with ifelse
 holidays = c(
+  "2010-05-09", "2011-05-08", "2012-05-13", # Mother's Day
+  "2012-06-20", "2012-06-19", "2012-06-17", # Father's Day
   "2010-05-31", "2011-05-30", "2012-05-28", # Memorial Day
   "2010-04-04", "2011-04-24", "2012-04-08", # Easter
   "2010-10-31", "2011-10-31", "2012-10-31", # Halloween
@@ -214,91 +261,137 @@ store_data_with_holidays %>%
       limits=c(0,NA)
     )
 ```
-```{r}
-# store_data_with_holidays %>% 
-#   ggplot() + 
-#     geom_line(
-#       aes(
-#         x=Plot_Date,
-#         y=Total_Sales, 
-#         color=factor(Next_Week_Holiday), 
-#         group=1
-#       )
-#     ) +
-#     facet_wrap(~Year) +
-#     labs(
-#       title="Total Sales Each Week", 
-#       color="Holiday", 
-#       y="Total Sales (in millions)"
-#     ) +
-#     scale_x_date(
-#       breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
-#                                                  to = as.Date("2014-01-01"), 
-#                                                  by = "6 months"),
-#       date_labels="%m-%d"
-#     ) +
-#     scale_y_continuous(
-#       labels = scales::number_format(scale = 1/1000000), 
-#       limits=c(0,NA)
-#     ) +
-#     theme(axis.text.x = element_text(angle = -45, hjust=-0.25), aspect.ratio=1/1)
-```
 
-
-# Looking at other factors
-```{r}
-for (col in c("Unemployment", "CPI", "Fuel_Price", "Temperature")) {
-  label = str_replace_all(col, "_", " ")
-  print(
-    store_data %>% 
-      ggplot() +
-        geom_point(aes_string(x=col,y="Weekly_Sales",color="factor(Store)")) +
-        labs(
-          title=paste0(label," vs Weekly Sales for Each Store"), 
-          x=label, 
-          y="Weekly Sales (in millions)"
-        ) +
-        theme(legend.position = "none") +
-        scale_y_continuous(
-          labels = scales::number_format(scale = 1/1000000), 
-          limits=c(0,NA)
-        )
-  )
-}
-```
-
-```{r, message=F}
-store_data %>% 
-  mutate(
-    Season=case_when(
-      Month %in% c(12,1,2) ~ "Winter",
-      Month %in% c(3:5) ~ "Spring",
-      Month %in% c(6:8) ~ "Summer",
-      .default = "Fall"
-    )
-  ) %>% 
-  group_by(Season, Year) %>% 
-  summarize(Total = sum(Weekly_Sales)) %>% 
-  ggplot() + 
-    geom_bar(aes(x=Season, y=Total, fill=factor(Year)), stat = "identity") +
-    labs(title="Total Sales by Season", y="Total Sales (in millions)") +
-    scale_y_continuous(
-      labels = scales::number_format(scale = 1/1000000), 
-      limits=c(0,NA)
-    )
-```
 ```{r}
 store_data_with_holidays %>% 
-  group_by(Holiday_Flag) %>% 
-  summarize(Total_Sales=mean(Weekly_Sales)) %>% 
   ggplot() + 
-    geom_bar(aes(x=factor(Holiday_Flag), y=Total_Sales), stat = "identity") +
-    labs(title="Average Sales by Holiday", y="Average Sales (in millions)") +
+    geom_line(aes(x=Plot_Date,y=Total_Sales,color=factor(Year))) + 
+    geom_point(aes(
+      x=Plot_Date,
+      y=Total_Sales,
+      alpha=factor(Holiday_Flag),
+      color=factor(Holiday_Flag)
+    ),size=0.75, show.legend = FALSE) +
+    scale_alpha_manual(values = c("0" = 0, "1" = 1, "2" = 1)) +
+    scale_color_manual(values = c(
+      "2010" = "#F8766D", 
+      "2011" = "#00BA38", 
+      "2012" = "#619CFF", 
+      "1"="purple",
+      "2"="magenta"
+    )) +
+    labs(
+        x="Month-Day",
+        y="Total Weekly Sales (in millions)",
+        title="Total Weekly Sales Per Year Across All Stores With Holidays",
+        color="Year and Holiday Flag"
+      ) +
+    scale_x_date(
+      breaks = function(x) seq.Date(from = as.Date("2013-01-01"), 
+                                                 to = as.Date("2014-01-01"), 
+                                                 by = "1 month"),
+      date_labels="%m-%d"
+    ) +
     scale_y_continuous(
       labels = scales::number_format(scale = 1/1000000), 
       limits=c(0,NA)
     )
 ```
 
+# Looking at other factors
+
+```{r}
+longer_store_data = store_data %>% 
+  pivot_longer(
+    cols=c("Unemployment", "CPI", "Fuel_Price", "Temperature"),
+    names_to="Category",
+    values_to="Value"
+  )
+head(longer_store_data)
+```
+
+```{r}
+longer_store_data %>% 
+  ggplot() + 
+    geom_point(aes(x=Value,y=Weekly_Sales,color=factor(Store)), size=0.75) +
+    facet_wrap(~Category, scales="free") +
+    theme(legend.position = "none") +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    ) +
+    labs(y = "Weekly Sales (in millions)")
+```
+
+```{r}
+store_data %>% 
+  mutate(
+    Unemployment = case_when(
+      Unemployment <= 6~"<= 6%",
+      Unemployment <= 10~"<= 10%",
+      .default="> 10%"
+    ),
+    CPI = case_when(
+      CPI <= 150 ~"<= 150",
+      CPI <= 200 ~"<= 200",
+      .default="> 200"
+    ),
+    Fuel_Price = case_when(
+      Fuel_Price <= 3 ~"<= $3",
+      Fuel_Price <= 4 ~"<= $4",
+      .default="> $4"
+    ),
+    Temperature = case_when(
+      Temperature <= 40 ~"<= 40 F",
+      Temperature <= 75 ~"<= 75 F",
+      .default="> 75 F"
+    )
+  ) %>% 
+  select(Date, Weekly_Sales, Unemployment, CPI, Fuel_Price, Temperature) %>% 
+  pivot_longer(
+    cols = c("Unemployment", "CPI", "Fuel_Price", "Temperature"),
+    names_to = "Category",
+    values_to = "Value"
+  ) %>% 
+  ggplot() + 
+    geom_boxplot(aes(x=Value,y=Weekly_Sales),outlier.size=0.75) + 
+    facet_wrap(~Category, scales = "free", nrow = 2, ncol = 2) +
+    scale_y_continuous(
+      labels = scales::number_format(scale = 1/1000000), 
+      limits=c(0,NA)
+    ) +
+    labs(y = "Weekly Sales (in millions)")
+```
+
+```{r}
+rounded_data = store_data %>% 
+  mutate(
+    RoundedTemp=round(Temperature,digits=-1),
+    RoundedCPI=round(CPI,digits=-1),
+    RoundedFuel=round(Fuel_Price,digits=1),
+    RoundedUnemployment=round(Unemployment)
+  )
+
+plots = list()
+for (col in c("RoundedTemp", "RoundedCPI", "RoundedFuel", "RoundedUnemployment")) {
+  plot = rounded_data %>%
+    group_by(!!sym(col)) %>% 
+    summarize(AvgSales=mean(Weekly_Sales)) %>% 
+    ggplot(aes_string(x=col,y="AvgSales")) + 
+      geom_bar(stat = "identity") +
+      scale_y_continuous(
+        labels = scales::number_format(scale = 1/1000000), 
+        limits=c(0,NA)
+      ) +
+      labs(y="Average Sales (in millions)")
+  plots[[col]] <- plot
+}
+
+plots[["RoundedTemp"]] + 
+  plots[["RoundedCPI"]] + 
+  plots[["RoundedFuel"]] + 
+  plots[["RoundedUnemployment"]] + 
+  plot_layout(ncol = 2, nrow = 2)
+```
 
 # Conclusion
