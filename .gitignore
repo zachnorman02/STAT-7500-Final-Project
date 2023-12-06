@@ -6,4 +6,6 @@ Rplots.pdf
 *.js
 *.html
 !FinalProjectReport.html
+!index.html
+.DS_Store
 *.DS_Store
