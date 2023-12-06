@@ -2,7 +2,8 @@
 title: "Final Project Report"
 subtitle: "Delaney Norman"
 date: "`r Sys.Date()`"
-format: pdf
+format: 
+  html: default
 ---
 
 ```{r setup, include=FALSE}
@@ -168,7 +169,7 @@ season_plots[["average"]] = season_data %>%
       limits=c(0,NA)
     )
 
-season_plots[["total"]] + season_plots[["average"]] + plot_layout(ncol = 2, nrow = 1)
+season_plots[["total"]] + season_plots[["average"]] + plot_layout(ncol = 1, nrow = 2)
 ```
 
 # Holidays
@@ -363,7 +364,7 @@ store_data %>%
     labs(y = "Weekly Sales (in millions)")
 ```
 
-```{r}
+```{r, message=F}
 rounded_data = store_data %>% 
   mutate(
     RoundedTemp=round(Temperature,digits=-1),
