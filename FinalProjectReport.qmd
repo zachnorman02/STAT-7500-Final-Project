@@ -4,6 +4,8 @@ subtitle: "Delaney Norman"
 date: "`r Sys.Date()`"
 format: 
   html: default
+output-file: "index"
+output-ext: "html"
 ---
 
 ```{r setup, include=FALSE}
