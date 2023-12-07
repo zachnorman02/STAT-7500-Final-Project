@@ -12,6 +12,7 @@ output-ext: "html"
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(patchwork)
+library(stats)
 ```
 
 # Importing the Dataset
@@ -398,10 +399,32 @@ plots[["RoundedTemp"]] +
 ```
 
 ```{r}
-print(paste0("Temperature: ", stats::cor(store_data$Weekly_Sales,store_data$Temperature)))
-print(paste0("CPI: ", stats::cor(store_data$Weekly_Sales,store_data$CPI)))
-print(paste0("Unemployment: ", stats::cor(store_data$Weekly_Sales,store_data$Unemployment)))
-print(paste0("Fuel: ", stats::cor(store_data$Weekly_Sales,store_data$Fuel_Price)))
+print(paste0("Temperature: ", cor(store_data$Weekly_Sales,store_data$Temperature)))
+print(paste0("CPI: ", cor(store_data$Weekly_Sales,store_data$CPI)))
+print(paste0("Unemployment: ", cor(store_data$Weekly_Sales,store_data$Unemployment)))
+print(paste0("Fuel: ", cor(store_data$Weekly_Sales,store_data$Fuel_Price)))
 ```
+```{r}
+# corr by store
+unemployment = c()
+temp = c()
+fuel = c()
+cpi = c()
+for (store in 1:45) {
+  data = store_data %>% dplyr::filter(Store==store) 
+  unemployment = append(unemployment, cor(data$Weekly_Sales,data$Unemployment))
+  temp = append(temp, cor(data$Weekly_Sales,data$Temperature))
+  fuel = append(fuel, cor(data$Weekly_Sales,data$Fuel_Price))
+  cpi = append(cpi, cor(data$Weekly_Sales,data$CPI))
+}
+data.frame(
+  Store=1:45,
+  Unemployment=unemployment,
+  Temperature=temp,
+  Fuel_Price=fuel,
+  CPI=cpi
+) %>% round(2)
+```
+
 
 # Conclusion
