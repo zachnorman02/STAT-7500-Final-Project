@@ -417,13 +417,42 @@ for (store in 1:45) {
   fuel = append(fuel, cor(data$Weekly_Sales,data$Fuel_Price))
   cpi = append(cpi, cor(data$Weekly_Sales,data$CPI))
 }
-data.frame(
+cors = data.frame(
   Store=1:45,
   Unemployment=unemployment,
   Temperature=temp,
   Fuel_Price=fuel,
   CPI=cpi
 ) %>% round(2)
+cors
+```
+```{r}
+t(as.matrix(cors %>% select(-Store))) %>% heatmap(scale="column",Colv = NA, Rowv = NA)
+```
+
+```{r, message=F}
+# Temperatures by store
+store_temps_grouped = store_data %>% 
+  group_by(Store, Month) %>% 
+  summarize(Mean_Temperature=mean(Temperature)) %>% 
+  mutate(
+    Month_Name = month.name,
+    Mean_Temperature = round(Mean_Temperature, 2)
+  )
+store_temps = store_temps_grouped %>% 
+  dplyr::select(-Month) %>% 
+  pivot_wider(
+    names_from=Month_Name,
+    values_from = Mean_Temperature
+  )
+store_temps
+```
+
+```{r}
+store_temps_grouped %>% 
+  ggplot() + 
+    geom_line(aes(x=Month,y=Mean_Temperature,color=factor(Store))) +
+    theme(legend.position = "none")
 ```
 
 
