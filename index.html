@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-12-06">
+<meta name="dcterms.date" content="2023-12-11">
 
 <title>Final Project Report</title>
 <style>
@@ -92,7 +92,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 6, 2023</p>
+      <p class="date">December 11, 2023</p>
     </div>
   </div>
   
@@ -553,21 +553,141 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Temperature: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Temperature)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Temperature: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Temperature)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Temperature: -0.0638100131794695"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"CPI: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>CPI)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"CPI: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>CPI)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "CPI: -0.0726341620401763"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Unemployment: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Unemployment)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Unemployment: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Unemployment)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Unemployment: -0.106176089657954"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Fuel: "</span>, stats<span class="sc">::</span><span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Fuel_Price)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Fuel: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Fuel_Price)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Fuel: 0.00946378631447514"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># corr by store</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>unemployment <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>fuel <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>cpi <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (store <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">45</span>) {</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Store<span class="sc">==</span>store) </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  unemployment <span class="ot">=</span> <span class="fu">append</span>(unemployment, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Unemployment))</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">=</span> <span class="fu">append</span>(temp, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Temperature))</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  fuel <span class="ot">=</span> <span class="fu">append</span>(fuel, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Fuel_Price))</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  cpi <span class="ot">=</span> <span class="fu">append</span>(cpi, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>CPI))</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>cors <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Store=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">45</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unemployment=</span>unemployment,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Temperature=</span>temp,</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fuel_Price=</span>fuel,</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">CPI=</span>cpi</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>cors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Store Unemployment Temperature Fuel_Price   CPI
+1      1        -0.10       -0.22       0.12  0.23
+2      2         0.07       -0.30      -0.20 -0.06
+3      3        -0.23       -0.38       0.14  0.32
+4      4        -0.34       -0.23       0.21  0.35
+5      5        -0.21       -0.18       0.17  0.31
+6      6         0.04       -0.08      -0.10 -0.01
+7      7        -0.17        0.02       0.11  0.29
+8      8        -0.05       -0.31       0.03  0.12
+9      9        -0.19       -0.21       0.21  0.29
+10    10         0.13       -0.43      -0.19 -0.12
+11    11        -0.02       -0.28      -0.04  0.07
+12    12        -0.01       -0.38       0.02  0.08
+13    13        -0.17       -0.14       0.08  0.16
+14    14         0.21       -0.20      -0.35 -0.42
+15    15         0.08       -0.05      -0.19 -0.17
+16    16        -0.07        0.18       0.00  0.12
+17    17        -0.26        0.08       0.31  0.35
+18    18         0.14       -0.14      -0.28 -0.19
+19    19         0.10       -0.08      -0.19 -0.16
+20    20        -0.10       -0.26      -0.01  0.06
+21    21         0.22       -0.18      -0.14 -0.16
+22    22         0.04       -0.08      -0.07 -0.04
+23    23        -0.08        0.06       0.02  0.08
+24    24        -0.01        0.11      -0.11 -0.01
+25    25         0.00       -0.03      -0.08 -0.01
+26    26        -0.07        0.21       0.02  0.13
+27    27        -0.01        0.12      -0.23 -0.21
+28    28         0.14       -0.38      -0.14 -0.10
+29    29         0.08       -0.13      -0.09 -0.07
+30    30         0.20       -0.33      -0.43 -0.30
+31    31        -0.06       -0.26       0.11  0.13
+32    32        -0.10       -0.11       0.12  0.20
+33    33         0.10        0.02      -0.06 -0.05
+34    34         0.02       -0.28       0.01  0.12
+35    35         0.48        0.04      -0.50 -0.42
+36    36         0.83       -0.09      -0.73 -0.92
+37    37        -0.22       -0.30       0.21  0.24
+38    38        -0.79        0.03       0.70  0.81
+39    39        -0.38        0.06       0.27  0.43
+40    40        -0.11        0.09       0.03  0.11
+41    41        -0.35        0.11       0.31  0.39
+42    42        -0.36       -0.15       0.32  0.36
+43    43        -0.20        0.10      -0.34 -0.29
+44    44        -0.78        0.27       0.61  0.74
+45    45         0.00       -0.20      -0.05 -0.02</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="fu">as.matrix</span>(cors <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Store))) <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">scale=</span><span class="st">"column"</span>,<span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">Rowv =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Temperatures by store</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>store_temps_grouped <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Store, Month) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Mean_Temperature=</span><span class="fu">mean</span>(Temperature)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Month_Name =</span> month.name,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Temperature =</span> <span class="fu">round</span>(Mean_Temperature, <span class="dv">2</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>store_temps <span class="ot">=</span> store_temps_grouped <span class="sc">%&gt;%</span> </span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Month) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from=</span>Month_Name,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> Mean_Temperature</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>store_temps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 45 × 13
+# Groups:   Store [45]
+   Store January February March April   May  June  July August September October
+   &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+ 1     1    47.2     47.8  59.6  67.4  73.9  81.9  83.1   86.2      79.0    67.9
+ 2     2    44.6     46.3  58.7  66.3  73.4  83.1  85.6   87.9      79.9    67.2
+ 3     3    52.0     52.9  63.4  71.6  76.7  83.5  84.1   86.7      81.2    71.9
+ 4     4    38.2     38.8  53.2  61.8  68.8  79.8  80.7   80.2      71.7    62.5
+ 5     5    48.0     48.4  60.0  68.3  74.6  82.8  84.2   87.2      80.7    69.6
+ 6     6    48.2     49.0  60.4  69.2  74.7  83.2  84.5   87.1      80.6    69.8
+ 7     7    17.2     18.7  29.3  36.7  42.8  56.5  61.0   59.1      49.4    39.7
+ 8     8    40.1     38.7  52.7  61.9  67.9  80.3  80.5   81.0      72.9    62.0
+ 9     9    44.7     45.1  58.1  67.5  73.1  83.7  85.0   86.6      78.6    66.9
+10    10    52.8     54.2  60.4  69.3  76.9  86.8  88.5   87.5      83.7    74.7
+# ℹ 35 more rows
+# ℹ 2 more variables: November &lt;dbl&gt;, December &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>store_temps_grouped <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Month,<span class="at">y=</span>Mean_Temperature,<span class="at">color=</span><span class="fu">factor</span>(Store))) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>

@@ -39,11 +39,6 @@ roundedstore_data %>%
   ggplot(aes(x=RoundedTemp,y=Weekly_Sales)) + 
     geom_point(aes(color=factor(Store))) +
     theme(legend.position = "none")
-
-roundedstore_data %>%
-  group_by(RoundedTemp) %>% 
-  summarize(AvgSales=mean(Weekly_Sales)) %>% 
-  ggplot(aes(x=RoundedTemp,y=AvgSales)) + geom_bar(stat = "identity")
 ```
 
 ```{r}
@@ -53,22 +48,7 @@ roundedstore_data %>%
   ggplot(aes(x=RoundedCPI,y=AvgSales)) + geom_bar(stat = "identity")
 ```
 
-```{r}
-roundedstore_data %>%
-  group_by(RoundedFuel) %>% 
-  summarize(AvgSales=mean(Weekly_Sales)) %>% 
-  ggplot(aes(x=RoundedFuel,y=AvgSales)) + geom_bar(stat = "identity")
-```
 
-```{r}
-roundedstore_data %>%
-  group_by(RoundedUnemployment) %>% 
-  summarize(AvgSales=mean(Weekly_Sales)) %>% 
-  ggplot(aes(x=RoundedUnemployment,y=AvgSales)) + 
-    geom_bar(stat = "identity") + 
-    geom_smooth(method="lm", aes(color="red")) +
-    theme(legend.position = "none")
-```
 
 ```{r}
 store_data %>% 

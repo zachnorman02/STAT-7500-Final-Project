@@ -2,10 +2,7 @@
 title: "Final Project Report"
 subtitle: "Delaney Norman"
 date: "`r Sys.Date()`"
-format: 
-  html: default
-output-file: "index"
-output-ext: "html"
+format: html
 ---
 
 ```{r setup, include=FALSE}
@@ -13,13 +10,26 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(patchwork)
 library(stats)
+library(gridExtra)
+library(ggplot2)
+library(magick)
 ```
 
 # Importing the Dataset
 
 <copy from proposal>
 
-```{r}
+```{r, include=F}
+df_to_image = function(df, name, width_factor=75, height_factor=30) {
+  file = paste0("images/", name, ".png")
+  png(file, width = width_factor*ncol(df), height = height_factor*nrow(df))
+  grid.table(df)
+  dev.off()
+}
+
+```
+
+```{r, echo=F}
 # Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data
 
 store_data = read.csv(
@@ -34,12 +44,14 @@ store_data = read.csv(
     Plot_Date=as.Date(paste(2013,Month,Day,sep="-"),format="%Y-%m-%d")
   ) %>% 
   arrange(Date)
-head(store_data)
+invisible(df_to_image(head(store_data),"store_data"))
 ```
+
+![](images/store_data.png)
 
 # Total Sales Data
 
-```{r}
+```{r, echo=F}
 store_data_sales = store_data %>% 
   group_by(Date) %>% 
   summarize(Total_Sales=sum(Weekly_Sales)) 
@@ -61,14 +73,17 @@ store_data_sales %>%
     )
 ```
 
-```{r}
-store_data %>% 
+```{r, echo=F}
+store_data_totals = store_data %>% 
   group_by(Store) %>% 
   summarize(Total_Store_Sales=sum(Weekly_Sales)) %>% 
   arrange(desc(Total_Store_Sales))
+invisible(df_to_image(store_data_totals,"store_data_totals",width_factor=100,height_factor=22))
 ```
 
-```{r}
+![](images/store_data_totals.png)
+
+```{r, echo=F}
 store_data %>% 
   ggplot() + 
     geom_line(aes(x=Date,y=Weekly_Sales, color=factor(Store))) +
@@ -87,7 +102,7 @@ store_data %>%
     theme(legend.position = "none")
 ```
 
-```{r, message=F}
+```{r, message=F, echo=F}
 store_data %>% 
   group_by(Store, Year) %>% 
   summarize(Total_Store_Sales=sum(Weekly_Sales)) %>% 
@@ -111,7 +126,7 @@ store_data %>%
   
 ```
 
-```{r}
+```{r, echo=F}
 sales = store_data %>% 
   group_by(Year,Week) %>% 
   mutate(
@@ -140,7 +155,7 @@ sales %>%
     )
 ```
 
-```{r, message=F}
+```{r, message=F, echo=F}
 season_data = store_data %>% 
   mutate(
     Season=case_when(
@@ -179,7 +194,7 @@ season_plots[["total"]] + season_plots[["average"]] + plot_layout(ncol = 1, nrow
 
 ## Adding additional holidays
 
-```{r}
+```{r, echo=F}
 # Add other holidays to the store_data. 
 # Flag with "2" to differentiate from pre-existing holidays in the store_dataset
 # Observation: dates are for end of week, not beginning of week 
@@ -221,7 +236,7 @@ store_data_with_holidays = store_data %>%
 
 ## Looking at holiday impact
 
-```{r}
+```{r, echo=F}
 holidays = store_data_with_holidays %>% 
   select(Date, Holiday_Flag) %>% 
   distinct() %>% 
@@ -266,7 +281,7 @@ store_data_with_holidays %>%
     )
 ```
 
-```{r}
+```{r, echo=F}
 store_data_with_holidays %>% 
   ggplot() + 
     geom_line(aes(x=Plot_Date,y=Total_Sales,color=factor(Year))) + 
@@ -304,17 +319,19 @@ store_data_with_holidays %>%
 
 # Looking at other factors
 
-```{r}
+```{r, echo=F}
 longer_store_data = store_data %>% 
   pivot_longer(
     cols=c("Unemployment", "CPI", "Fuel_Price", "Temperature"),
     names_to="Category",
     values_to="Value"
   )
-head(longer_store_data)
+invisible(df_to_image(head(longer_store_data),"longer_store_data"))
 ```
 
-```{r}
+![](images/longer_store_data.png)
+
+```{r, echo=F}
 longer_store_data %>% 
   ggplot() + 
     geom_point(aes(x=Value,y=Weekly_Sales,color=factor(Store)), size=0.75) +
@@ -327,7 +344,7 @@ longer_store_data %>%
     labs(y = "Weekly Sales (in millions)")
 ```
 
-```{r}
+```{r, echo=F}
 store_data %>% 
   mutate(
     Unemployment = case_when(
@@ -367,7 +384,7 @@ store_data %>%
     labs(y = "Weekly Sales (in millions)")
 ```
 
-```{r, message=F}
+```{r, message=F, echo=F, warning=F}
 rounded_data = store_data %>% 
   mutate(
     RoundedTemp=round(Temperature,digits=-1),
@@ -398,13 +415,14 @@ plots[["RoundedTemp"]] +
   plot_layout(ncol = 2, nrow = 2)
 ```
 
-```{r}
+```{r, echo=F}
 print(paste0("Temperature: ", cor(store_data$Weekly_Sales,store_data$Temperature)))
 print(paste0("CPI: ", cor(store_data$Weekly_Sales,store_data$CPI)))
 print(paste0("Unemployment: ", cor(store_data$Weekly_Sales,store_data$Unemployment)))
 print(paste0("Fuel: ", cor(store_data$Weekly_Sales,store_data$Fuel_Price)))
 ```
-```{r}
+
+```{r, echo=F}
 # corr by store
 unemployment = c()
 temp = c()
@@ -424,13 +442,31 @@ cors = data.frame(
   Fuel_Price=fuel,
   CPI=cpi
 ) %>% round(2)
-cors
+invisible(df_to_image(cors, "cors", height_factor=21))
 ```
-```{r}
+
+![](images/cors.png)
+
+```{r, echo=F}
 t(as.matrix(cors %>% select(-Store))) %>% heatmap(scale="column",Colv = NA, Rowv = NA)
 ```
 
-```{r, message=F}
+```{r, echo=F}
+longer_store_data = store_data %>% 
+  pivot_longer(
+    cols=c("Unemployment", "CPI", "Fuel_Price", "Temperature"),
+    names_to="Category",
+    values_to="Value"
+  )
+
+longer_store_data %>% 
+  ggplot() +
+  geom_line(aes(x=Date,y=Value, color=factor(Store))) +
+  facet_wrap(~Category, scales = "free", nrow = 2, ncol = 2) +
+  theme(legend.position = "none") 
+```
+
+```{r, message=F, echo=F}
 # Temperatures by store
 store_temps_grouped = store_data %>% 
   group_by(Store, Month) %>% 
@@ -445,15 +481,16 @@ store_temps = store_temps_grouped %>%
     names_from=Month_Name,
     values_from = Mean_Temperature
   )
-store_temps
+invisible(df_to_image(store_temps,"store_temps",width_factor=65,height_factor=22))
 ```
 
-```{r}
+![](images/store_temps.png)
+
+```{r, echo=F}
 store_temps_grouped %>% 
   ggplot() + 
     geom_line(aes(x=Month,y=Mean_Temperature,color=factor(Store))) +
     theme(legend.position = "none")
 ```
-
 
 # Conclusion
