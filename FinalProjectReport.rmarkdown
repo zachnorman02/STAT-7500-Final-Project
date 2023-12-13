@@ -15,9 +15,11 @@ library(ggplot2)
 library(magick)
 ```
 
+
 # Importing the Dataset
 
 <copy from proposal>
+
 
 ```{r, include=F}
 df_to_image = function(df, name, width_factor=75, height_factor=30) {
@@ -47,9 +49,11 @@ store_data = read.csv(
 invisible(df_to_image(head(store_data),"store_data"))
 ```
 
+
 ![](images/store_data.png)
 
 # Total Sales Data
+
 
 ```{r, echo=F}
 store_data_sales = store_data %>% 
@@ -81,7 +85,9 @@ store_data_totals = store_data %>%
 invisible(df_to_image(store_data_totals,"store_data_totals",width_factor=100,height_factor=22))
 ```
 
+
 ![](images/store_data_totals.png)
+
 
 ```{r, echo=F}
 store_data %>% 
@@ -190,9 +196,11 @@ season_plots[["average"]] = season_data %>%
 season_plots[["total"]] + season_plots[["average"]] + plot_layout(ncol = 1, nrow = 2)
 ```
 
+
 # Holidays
 
 ## Adding additional holidays
+
 
 ```{r, echo=F}
 # Add other holidays to the store_data. 
@@ -234,7 +242,9 @@ store_data_with_holidays = store_data %>%
   )
 ```
 
+
 ## Looking at holiday impact
+
 
 ```{r, echo=F}
 holidays = store_data_with_holidays %>% 
@@ -317,7 +327,9 @@ store_data_with_holidays %>%
     )
 ```
 
+
 # Looking at other factors
+
 
 ```{r, echo=F}
 longer_store_data = store_data %>% 
@@ -329,7 +341,9 @@ longer_store_data = store_data %>%
 invisible(df_to_image(head(longer_store_data),"longer_store_data"))
 ```
 
+
 ![](images/longer_store_data.png)
+
 
 ```{r, echo=F}
 longer_store_data %>% 
@@ -467,7 +481,9 @@ cors = data.frame(
 invisible(df_to_image(cors, "cors", height_factor=21))
 ```
 
+
 ![](images/cors.png)
+
 
 ```{r, echo=F}
 t(as.matrix(cors %>% select(-Store))) %>% heatmap(scale="column",Colv = NA, Rowv = NA)
@@ -506,7 +522,9 @@ store_temps = store_temps_grouped %>%
 invisible(df_to_image(store_temps,"store_temps",width_factor=65,height_factor=22))
 ```
 
+
 ![](images/store_temps.png)
+
 
 ```{r, echo=F}
 store_temps_grouped %>% 
@@ -515,4 +533,6 @@ store_temps_grouped %>%
     theme(legend.position = "none")
 ```
 
+
 # Conclusion
+

@@ -170,23 +170,4 @@ rounded_percentage_sales %>%
     theme(legend.position = "none")
 ```
 
-```{r}
-longer_store_data = store_data %>% 
-  pivot_longer(
-    cols=c("Unemployment", "CPI", "Fuel_Price", "Temperature"),
-    names_to="Category",
-    values_to="Value"
-  )
-
-longer_store_data %>% 
-  ggplot() +
-  geom_line(aes(x=Date,y=Value, color=factor(Store))) +
-  facet_wrap(~Category, scales = "free", nrow = 2, ncol = 2) +
-  theme(legend.position = "none") 
-```
-
-```{r}
-# seasons
-
-```
 
