@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-12-11">
+<meta name="dcterms.date" content="2023-12-13">
 
 <title>Final Project Report</title>
 <style>
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -58,7 +92,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 11, 2023</p>
+      <p class="date">December 13, 2023</p>
     </div>
   </div>
   
@@ -70,60 +104,107 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="importing-the-dataset" class="level1">
 <h1>Importing the Dataset</h1>
-<p><copy from="" proposal=""></copy></p>
+<p>I analyzed <a href="https://www.kaggle.com/datasets/yasserh/walmart-dataset">this dataset from Kaggle</a> for weekly sales data from 45 Walmart stores between February 5, 2010, and November 1, 2012. In addition to weekly sales, it also includes information on if the week had a holiday (a value of 0 or 1 if Labor Day, Thanksgiving, Christmas, or the Super Bowl occurred), unemployment rate, average temperature in Fahrenheit, fuel price, and consumer price index. The dataset has 8 columns and 6435 rows (one row per store per week).</p>
+<p>Head of the data:</p>
 <p><img src="images/store_data.png" class="img-fluid"></p>
 </section>
 <section id="total-sales-data" class="level1">
 <h1>Total Sales Data</h1>
+<p>Below are the plots for weekly sales data over time, both over the course of the entire dataset and color-coded by year. There are highs and lows throughout the year, but generally sales are flat throughout the year, with the exception of the end of the year around the holidays, where there is a big increase in sales. There is no upward trend at the end of 2012 due to the dataset cutting off in October 2012. As seen in the second graph, all the years are pretty similar in trends as well, with some peaks happening in slightly different spots.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><img src="images/store_data_totals.png" class="img-fluid"></p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<section id="comparing-stores" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-stores">Comparing stores</h2>
+<p>I also looked at comparing each store and seeing what each store looked like in terms of sales. As you can see, all the stores follow similar trends, and each store has a similar ranking in terms of sales throughout the entire dataset. Stores 20 and 4 have the highest sales, while 33 and 44 have the lowest.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p><img src="images/store_data_totals.png" class="img-fluid"></p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="holidays" class="level1">
-<h1>Holidays</h1>
-<section id="adding-additional-holidays" class="level2">
-<h2 class="anchored" data-anchor-id="adding-additional-holidays">Adding additional holidays</h2>
-</section>
-<section id="looking-at-holiday-impact" class="level2">
-<h2 class="anchored" data-anchor-id="looking-at-holiday-impact">Looking at holiday impact</h2>
+<section id="seasons" class="level2">
+<h2 class="anchored" data-anchor-id="seasons">Seasons</h2>
+<p>I also decided to look at sales by season to see if there was a difference. I decided to group seasons by the following: - Winter: December, January, February - Spring: March, April, May - Summer: June, July, August - Fall: September, October, November</p>
+<p>When looking at the plot originally for sales totals, it appeared that summer was highest and winter was lowest, which seems strange as winter should include most of the holiday shopping (though Black Friday would be considered fall). However, since the dataset is missing January 2010 and November-December 2012, it is missing a decent amount (2 months) of winter data. I then decided to look at average sales instead, where winter was the highest, lining up more with what we’d expect from the time series plots.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+</section>
+<section id="holidays" class="level1">
+<h1>Holidays</h1>
+<section id="adding-additional-holidays" class="level2">
+<h2 class="anchored" data-anchor-id="adding-additional-holidays">Adding additional holidays</h2>
+<p>I wondered if other holidays had an impact on sales, so I decided to add other holidays to the dataset that tend to have some shopping associated with them. I marked the holidays I added with 2 (changing my logical variable into more of an ordinal one) so I could more easily differentiate the holidays I added versus the ones that already existed in the dataset.</p>
 <div class="cell">
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add other holidays to the store_data. </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag with "2" to differentiate from pre-existing holidays in the store_dataset</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation: dates are for end of week, not beginning of week </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (so take date and check week previous, not week after)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-09"</span>, <span class="st">"2011-05-08"</span>, <span class="st">"2012-05-13"</span>, <span class="co"># Mother's Day</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2012-06-20"</span>, <span class="st">"2012-06-19"</span>, <span class="st">"2012-06-17"</span>, <span class="co"># Father's Day</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-31"</span>, <span class="st">"2011-05-30"</span>, <span class="st">"2012-05-28"</span>, <span class="co"># Memorial Day</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-04-04"</span>, <span class="st">"2011-04-24"</span>, <span class="st">"2012-04-08"</span>, <span class="co"># Easter</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-10-31"</span>, <span class="st">"2011-10-31"</span>, <span class="st">"2012-10-31"</span>, <span class="co"># Halloween</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-07-04"</span>, <span class="st">"2011-07-04"</span>, <span class="st">"2012-07-04"</span>, <span class="co"># 4th of July</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-02-14"</span>, <span class="st">"2011-02-14"</span>, <span class="st">"2012-02-14"</span>  <span class="co"># Valentine's Day</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>determine_holiday <span class="ot">=</span> <span class="cf">function</span>(day) {</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (holiday <span class="cf">in</span> holidays) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">between</span>(<span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(holiday,<span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)<span class="sc">-</span>day), <span class="sc">-</span><span class="dv">6</span>, <span class="dv">0</span>)) {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Allows determine_holiday to take in one date at a time in the ifelse</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>determine_holiday_vectorized <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(determine_holiday)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="ot">=</span> store_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Holiday_Flag =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag<span class="sc">==</span><span class="dv">0</span>, </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">determine_holiday_vectorized</span>(Date),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        Holiday_Flag</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="looking-at-other-factors" class="level1">
-<h1>Looking at other factors</h1>
-<p><img src="images/longer_store_data.png" class="img-fluid"></p>
+<section id="looking-at-holiday-impact" class="level2">
+<h2 class="anchored" data-anchor-id="looking-at-holiday-impact">Looking at holiday impact</h2>
+<p>I decided to remake some of the time series plots I made earlier, but point out holidays as well. One of the issues I came across is due to the the dates in the dataset being for the last day of the sale week. The way ggplot colors the graphs (as an example): - Dec 20 has a holiday flag of 0, as Dec 14-20 have no holidays - Dec 27 has a holiday flag of 1, since Christmas is 2 days earlier and contained in the week - ggplot colors with a different color going forward - Jan 3 has a holiday flag again of 0 since there’s no holiday in the previous week, so <em>then</em> ggplot changes the color back However, we want it to color previous to the date based on the holiday flag, not previous to it. Therefore, I had to add a lead variable to get the next week’s holiday flag and color off of that instead (code for lead variable below).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> store_data_with_holidays <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, Holiday_Flag) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Next_Week_Holiday =</span> <span class="fu">lead</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag, <span class="at">default =</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I made a plot that color-coded weeks based on their holiday flag and a plot grouped by year with points for where each holiday occurs. Based on this, it appears that most peaks in sales occur either the week of the holiday or the week before (depending on when in the week the holiday occurred. For example, a holiday occuring on a Thursday would show sales increase the same week, whereas a holiday on a Sunday would likely show the week before). What is interesting is that there appear to be small peaks at the beginning of August and beginning of October that don’t correspond with holidays.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
@@ -134,9 +215,62 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+</section>
+<section id="looking-at-other-factors" class="level1">
+<h1>Looking at other factors</h1>
+<p>I was interested in seeing if the other variables in the dataset affected sales in any way. So I could display the plots using a facet-wrap, I did a pivot longer to have each of the variables as a column I could group on.</p>
+<p>As can be seen in the plots, there does not appear to be much relationship between CPI/unemployment/temperature/fuel price and weekly sales. Some things I noticed: - Stores don’t change much in terms of CPI - No matter the fuel price, weekly sales for each store remained consistent/flat - Temperature, CPI, and Unemployment appear to have a slight right skew, but there is generally not much relationship.</p>
+<p><img src="images/longer_store_data.png" class="img-fluid"></p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>I also decided to divide each variable into 3 bins and create boxplots to see if there was a major difference in the median sales. While the range sizes of the middle 50% and extreme values at times differ, the medians appear to not shift across variable values.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rounded_data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedTemp=</span><span class="fu">round</span>(Temperature,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedCPI=</span><span class="fu">round</span>(CPI,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedFuel=</span><span class="fu">round</span>(Fuel_Price,<span class="at">digits=</span><span class="dv">1</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedUnemployment=</span><span class="fu">round</span>(Unemployment)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"RoundedTemp"</span>, <span class="st">"RoundedCPI"</span>, <span class="st">"RoundedFuel"</span>, <span class="st">"RoundedUnemployment"</span>)) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">=</span> rounded_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Store,<span class="at">y=</span>Weekly_Sales)) <span class="sc">+</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="fu">aes_string</span>(<span class="at">color=</span><span class="fu">paste0</span>(<span class="st">"factor("</span>,col,<span class="st">")"</span>))) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Weekly Sales (in millions)"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  plots[[col]] <span class="ot">&lt;-</span> plot</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plots[[<span class="st">"RoundedTemp"</span>]] <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedCPI"</span>]] <span class="sc">+</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedFuel"</span>]] <span class="sc">+</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedUnemployment"</span>]] <span class="sc">+</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -156,18 +290,18 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="images/cors.png" class="img-fluid"></p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><img src="images/store_temps.png" class="img-fluid"></p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
