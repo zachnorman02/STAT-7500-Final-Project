@@ -105,7 +105,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="importing-the-dataset" class="level1">
 <h1>Importing the Dataset</h1>
 <p>I analyzed <a href="https://www.kaggle.com/datasets/yasserh/walmart-dataset">this dataset from Kaggle</a> for weekly sales data from 45 Walmart stores between February 5, 2010, and November 1, 2012. In addition to weekly sales, it also includes information on if the week had a holiday (a value of 0 or 1 if Labor Day, Thanksgiving, Christmas, or the Super Bowl occurred), unemployment rate, average temperature in Fahrenheit, fuel price, and consumer price index. The dataset has 8 columns and 6435 rows (one row per store per week).</p>
-<p>Head of the data:</p>
 <p><img src="images/store_data.png" class="img-fluid"></p>
 </section>
 <section id="total-sales-data" class="level1">
@@ -129,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><img src="images/store_data_totals.png" class="img-fluid"></p>
+<!-- ![](images/store_data_totals.png) -->
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
@@ -233,44 +232,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>I then decided to bin the values by rounding them and creating a histogram for each variable. When looking at the histograms, Unemployment appears to have the most relationship (a downward trend), while Temperature, Fuel Price, and CPI appear to have a bell-curve shape (larger middle, lower ends). This also matches up with the calculated correlation values. Unemployment has the highest correlation but is still very low (-0.1, very close to 0).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rounded_data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedTemp=</span><span class="fu">round</span>(Temperature,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedCPI=</span><span class="fu">round</span>(CPI,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedFuel=</span><span class="fu">round</span>(Fuel_Price,<span class="at">digits=</span><span class="dv">1</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedUnemployment=</span><span class="fu">round</span>(Unemployment)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"RoundedTemp"</span>, <span class="st">"RoundedCPI"</span>, <span class="st">"RoundedFuel"</span>, <span class="st">"RoundedUnemployment"</span>)) {</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">=</span> rounded_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Store,<span class="at">y=</span>Weekly_Sales)) <span class="sc">+</span> </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="fu">aes_string</span>(<span class="at">color=</span><span class="fu">paste0</span>(<span class="st">"factor("</span>,col,<span class="st">")"</span>))) <span class="sc">+</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Weekly Sales (in millions)"</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  plots[[col]] <span class="ot">&lt;-</span> plot</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation idioms with `aes()`.
-ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plots[[<span class="st">"RoundedTemp"</span>]] <span class="sc">+</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedCPI"</span>]] <span class="sc">+</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedFuel"</span>]] <span class="sc">+</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedUnemployment"</span>]] <span class="sc">+</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -287,12 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "Fuel: 0.00946378631447514"</code></pre>
 </div>
 </div>
-<p><img src="images/cors.png" class="img-fluid"></p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<!-- ![](images/cors.png) -->
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>

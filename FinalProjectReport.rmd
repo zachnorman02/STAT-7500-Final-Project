@@ -50,8 +50,6 @@ invisible(df_to_image(head(store_data),"store_data"))
 head(store_data)
 ```
 
-Head of the data:
-
 ![](images/store_data.png)
 
 # Total Sales Data
@@ -143,7 +141,7 @@ invisible(df_to_image(store_data_totals,"store_data_totals",width_factor=100,hei
 store_data_totals
 ```
 
-![](images/store_data_totals.png)
+<!-- ![](images/store_data_totals.png) -->
 
 ```{r, message=F, echo=F}
 store_data %>% 
@@ -449,8 +447,9 @@ store_data %>%
     ) +
     labs(y = "Weekly Sales (in millions)", x = "Value")
 ```
+I then decided to bin the values by rounding them and creating a histogram for each variable. When looking at the histograms, Unemployment appears to have the most relationship (a downward trend), while Temperature, Fuel Price, and CPI appear to have a bell-curve shape (larger middle, lower ends). This also matches up with the calculated correlation values. Unemployment has the highest correlation but is still very low (-0.1, very close to 0).
 
-```{r}
+```{r, message=F, echo=F, warning=FALSE}
 rounded_data = store_data %>% 
   mutate(
     RoundedTemp=round(Temperature,digits=-1),
@@ -459,28 +458,6 @@ rounded_data = store_data %>%
     RoundedUnemployment=round(Unemployment)
   )
 
-plots = list()
-for (col in c("RoundedTemp", "RoundedCPI", "RoundedFuel", "RoundedUnemployment")) {
-  plot = rounded_data %>%
-    ggplot(aes(x=Store,y=Weekly_Sales)) + 
-      geom_point(aes_string(color=paste0("factor(",col,")"))) +
-      scale_y_continuous(
-        labels = scales::number_format(scale = 1/1000000), 
-        limits=c(0,NA)
-      ) +
-      labs(y="Weekly Sales (in millions)")
-  plots[[col]] <- plot
-}
-
-plots[["RoundedTemp"]] + 
-  plots[["RoundedCPI"]] + 
-  plots[["RoundedFuel"]] + 
-  plots[["RoundedUnemployment"]] + 
-  plot_layout(ncol = 2, nrow = 2)
-
-```
-
-```{r, message=F, echo=F, warning=FALSE}
 plots = list()
 for (col in c("RoundedTemp", "RoundedCPI", "RoundedFuel", "RoundedUnemployment")) {
   plot = rounded_data %>%
@@ -511,7 +488,6 @@ print(paste0("Fuel: ", cor(store_data$Weekly_Sales,store_data$Fuel_Price)))
 ```
 
 ```{r, echo=F}
-# corr by store
 unemployment = c()
 temp = c()
 fuel = c()
@@ -532,10 +508,13 @@ cors = data.frame(
 ) %>% round(2)
 invisible(df_to_image(cors, "cors", height_factor=21))
 ```
+```{r, include=F}
+cors
+```
 
-![](images/cors.png)
+<!-- ![](images/cors.png) -->
 
-```{r, echo=F}
+```{r, include=F}
 t(as.matrix(cors %>% select(-Store))) %>% heatmap(scale="column",Colv = NA, Rowv = NA)
 ```
 
