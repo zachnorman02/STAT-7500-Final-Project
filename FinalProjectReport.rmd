@@ -1,8 +1,10 @@
 ---
 title: "Final Project Report"
-subtitle: "Delaney Norman"
+subtitle: "Zach Norman"
 date: "`r Sys.Date()`"
 format: html
+output-file: "index"
+output-ext: "html"
 ---
 
 ```{r setup, include=FALSE}

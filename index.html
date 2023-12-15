@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-12-11">
+<meta name="dcterms.date" content="2023-12-15">
 
 <title>Final Project Report</title>
 <style>
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Final Project Report</h1>
-<p class="subtitle lead">Delaney Norman</p>
+<p class="subtitle lead">Zach Norman</p>
 </div>
 
 
@@ -92,7 +92,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 11, 2023</p>
+      <p class="date">December 15, 2023</p>
     </div>
   </div>
   
@@ -104,595 +104,183 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="importing-the-dataset" class="level1">
 <h1>Importing the Dataset</h1>
-<p><copy from="" proposal=""></copy></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Original URL: https://www.kaggle.com/datasets/yasserh/walmart-dataset/data</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>store_data <span class="ot">=</span> <span class="fu">read.csv</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"/Users/delracman/Documents/STAT 7500/Project/Walmart.csv"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Date=</span><span class="fu">as.Date</span>(Date,<span class="at">format=</span><span class="st">"%d-%m-%Y"</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Year=</span><span class="fu">year</span>(Date),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Month=</span><span class="fu">month</span>(Date),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Day=</span><span class="fu">day</span>(Date),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Week=</span><span class="fu">week</span>(Date),</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Plot_Date=</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(<span class="dv">2013</span>,Month,Day,<span class="at">sep=</span><span class="st">"-"</span>),<span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Date)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(store_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Store       Date Weekly_Sales Holiday_Flag Temperature Fuel_Price      CPI
-1     1 2010-02-05    1643690.9            0       42.31      2.572 211.0964
-2     2 2010-02-05    2136989.5            0       40.19      2.572 210.7526
-3     3 2010-02-05     461622.2            0       45.71      2.572 214.4249
-4     4 2010-02-05    2135143.9            0       43.76      2.598 126.4421
-5     5 2010-02-05     317173.1            0       39.70      2.572 211.6540
-6     6 2010-02-05    1652635.1            0       40.43      2.572 212.6224
-  Unemployment Year Month Day Week  Plot_Date
-1        8.106 2010     2   5    6 2013-02-05
-2        8.324 2010     2   5    6 2013-02-05
-3        7.368 2010     2   5    6 2013-02-05
-4        8.623 2010     2   5    6 2013-02-05
-5        6.566 2010     2   5    6 2013-02-05
-6        7.259 2010     2   5    6 2013-02-05</code></pre>
-</div>
-</div>
+<p>I analyzed <a href="https://www.kaggle.com/datasets/yasserh/walmart-dataset">this dataset from Kaggle</a> for weekly sales data from 45 Walmart stores between February 5, 2010, and November 1, 2012. In addition to weekly sales, it also includes information on if the week had a holiday (a value of 0 or 1 if Labor Day, Thanksgiving, Christmas, or the Super Bowl occurred), unemployment rate, average temperature in Fahrenheit, fuel price, and consumer price index. The dataset has 8 columns and 6435 rows (one row per store per week).</p>
+<p><img src="images/store_data.png" class="img-fluid"></p>
 </section>
 <section id="total-sales-data" class="level1">
 <h1>Total Sales Data</h1>
+<p>Below are the plots for weekly sales data over time, both over the course of the entire dataset and color-coded by year. There are highs and lows throughout the year, but generally sales are flat throughout the year, with the exception of the end of the year around the holidays, where there is a big increase in sales. There is no upward trend at the end of 2012 due to the dataset cutting off in October 2012.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>store_data_sales <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Date) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Total_Sales=</span><span class="fu">sum</span>(Weekly_Sales)) </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>store_data_sales <span class="sc">%&gt;%</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Date,<span class="at">y=</span>Total_Sales)) <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span><span class="st">"Total Sales Each Week"</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span><span class="st">"Total Sales (in millions)"</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">breaks =</span> <span class="cf">function</span>(x) <span class="fu">seq.Date</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2010-01-01"</span>), </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2012-12-31"</span>), </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">by =</span> <span class="st">"4 months"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                                              ) <span class="sc">+</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Store) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Total_Store_Sales=</span><span class="fu">sum</span>(Weekly_Sales)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Total_Store_Sales))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 45 × 2
-   Store Total_Store_Sales
-   &lt;int&gt;             &lt;dbl&gt;
- 1    20        301397792.
- 2     4        299543953.
- 3    14        288999911.
- 4    13        286517704.
- 5     2        275382441.
- 6    10        271617714.
- 7    27        253855917.
- 8     6        223756131.
- 9     1        222402809.
-10    39        207445542.
-# ℹ 35 more rows</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Date,<span class="at">y=</span>Weekly_Sales, <span class="at">color=</span><span class="fu">factor</span>(Store))) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span><span class="st">"Total Sales Each Week"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span><span class="st">"Total Sales (in millions)"</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">breaks =</span> <span class="cf">function</span>(x) <span class="fu">seq.Date</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2010-01-01"</span>), </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2012-12-31"</span>), </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">by =</span> <span class="st">"4 months"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                                              ) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>As seen here, all the years are pretty similar in trends as well, with some peaks happening in slightly different spots. In order to correctly overlay the years (because going off of just the dates, even coloring by year, would just make a color-coded version of the graph above), I made a new column with the same month and day, but made the year for every week 2013. I then plotted with the new column in the x-axis, colored based on the original year, and changed the x-axis labels to exclude the year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Store, Year) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Total_Store_Sales=</span><span class="fu">sum</span>(Weekly_Sales)) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Total_Store_Sales)) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">factor</span>(Store), <span class="at">y=</span>Total_Store_Sales, <span class="at">fill=</span><span class="fu">factor</span>(Year)), </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">stat =</span> <span class="st">"identity"</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">45</span>,<span class="at">by=</span><span class="dv">3</span>)) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span> </span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span><span class="st">"Total Sales For Each Store By Year"</span>, </span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x=</span><span class="st">"Store"</span>, </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span><span class="st">"Total Sales (in millions)"</span>,</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill=</span><span class="st">"Year"</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<section id="comparing-stores" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-stores">Comparing stores</h2>
+<p>I also looked at comparing each store and seeing what each store looked like in terms of sales. As you can see, all the stores follow similar trends, and each store has a similar ranking in terms of sales throughout the entire dataset. Stores 20 and 4 have the highest sales, while 33 and 44 have the lowest.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sales <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Year,Week) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Average_Sales=</span><span class="fu">mean</span>(Weekly_Sales),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Total_Sales=</span><span class="fu">sum</span>(Weekly_Sales)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>sales <span class="sc">%&gt;%</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Plot_Date,<span class="at">y=</span>Total_Sales,<span class="at">color=</span><span class="fu">factor</span>(Year))) <span class="sc">+</span> </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">x=</span><span class="st">"Month-Day"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">y=</span><span class="st">"Total Weekly Sales (in millions)"</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">title=</span><span class="st">"Total Weekly Sales Per Year Across All Stores"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">color=</span><span class="st">"Year"</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="cf">function</span>(x) <span class="fu">seq.Date</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), </span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2014-01-01"</span>), </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">by =</span> <span class="st">"1 month"</span>),</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_labels=</span><span class="st">"%m-%d"</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<!-- ![](images/store_data_totals.png) -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>season_data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Season=</span><span class="fu">case_when</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      Month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">~</span> <span class="st">"Winter"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      Month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring"</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      Month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer"</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">"Fall"</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Season, Year) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Weekly_Sales), <span class="at">Average=</span><span class="fu">mean</span>(Weekly_Sales)) </span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>season_plots <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>season_plots[[<span class="st">"total"</span>]] <span class="ot">=</span> season_data <span class="sc">%&gt;%</span> </span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x=</span>Season, <span class="at">y=</span>Total, <span class="at">fill=</span><span class="fu">factor</span>(Year)), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Total Sales by Season"</span>, <span class="at">y=</span><span class="st">"Total Sales (in millions)"</span>, <span class="at">fill=</span><span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>season_plots[[<span class="st">"average"</span>]] <span class="ot">=</span> season_data <span class="sc">%&gt;%</span> </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x=</span>Season, <span class="at">y=</span>Average, <span class="at">fill=</span><span class="fu">factor</span>(Year)), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Average Sales by Season"</span>, <span class="at">y=</span><span class="st">"Average Sales (in millions)"</span>, <span class="at">fill=</span><span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>season_plots[[<span class="st">"total"</span>]] <span class="sc">+</span> season_plots[[<span class="st">"average"</span>]] <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="holidays" class="level1">
-<h1>Holidays</h1>
-<section id="adding-additional-holidays" class="level2">
-<h2 class="anchored" data-anchor-id="adding-additional-holidays">Adding additional holidays</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add other holidays to the store_data. </span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag with "2" to differentiate from pre-existing holidays in the store_dataset</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation: dates are for end of week, not beginning of week </span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (so take date and check week previous, not week after)</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Also vectorized to be able to use with ifelse</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> <span class="fu">c</span>(</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-09"</span>, <span class="st">"2011-05-08"</span>, <span class="st">"2012-05-13"</span>, <span class="co"># Mother's Day</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2012-06-20"</span>, <span class="st">"2012-06-19"</span>, <span class="st">"2012-06-17"</span>, <span class="co"># Father's Day</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-31"</span>, <span class="st">"2011-05-30"</span>, <span class="st">"2012-05-28"</span>, <span class="co"># Memorial Day</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-04-04"</span>, <span class="st">"2011-04-24"</span>, <span class="st">"2012-04-08"</span>, <span class="co"># Easter</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-10-31"</span>, <span class="st">"2011-10-31"</span>, <span class="st">"2012-10-31"</span>, <span class="co"># Halloween</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-07-04"</span>, <span class="st">"2011-07-04"</span>, <span class="st">"2012-07-04"</span>, <span class="co"># 4th of July</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-02-14"</span>, <span class="st">"2011-02-14"</span>, <span class="st">"2012-02-14"</span>  <span class="co"># Valentine's Day</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>determine_holiday <span class="ot">=</span> <span class="cf">function</span>(day) {</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (holiday <span class="cf">in</span> holidays) {</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">between</span>(<span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(holiday,<span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)<span class="sc">-</span>day), <span class="sc">-</span><span class="dv">6</span>, <span class="dv">0</span>)) {</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Allows determine_holiday to take in one date at a time in the ifelse</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>determine_holiday_vectorized <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(determine_holiday)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="ot">=</span> store_data <span class="sc">%&gt;%</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">Holiday_Flag =</span> <span class="fu">ifelse</span>(</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag<span class="sc">==</span><span class="dv">0</span>, </span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">determine_holiday_vectorized</span>(Date),</span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span>,</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        Holiday_Flag</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="looking-at-holiday-impact" class="level2">
-<h2 class="anchored" data-anchor-id="looking-at-holiday-impact">Looking at holiday impact</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> store_data_with_holidays <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, Holiday_Flag) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Next_Week_Holiday =</span> <span class="fu">lead</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag, <span class="at">default =</span> <span class="dv">0</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="ot">=</span> store_data_with_holidays <span class="sc">%&gt;%</span> </span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Date) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Total_Sales=</span><span class="fu">sum</span>(Weekly_Sales),</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    holidays <span class="sc">%&gt;%</span> </span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="sc">-</span>Holiday_Flag), </span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">by=</span><span class="st">"Date"</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  ) </span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="sc">%&gt;%</span> </span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">x=</span>Date,</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">y=</span>Total_Sales, </span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">color=</span><span class="fu">factor</span>(Next_Week_Holiday), </span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">group=</span><span class="dv">1</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span><span class="st">"Total Sales Each Week"</span>, </span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span><span class="st">"Holiday"</span>, </span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span><span class="st">"Total Sales (in millions)"</span></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">breaks =</span> <span class="cf">function</span>(x) <span class="fu">seq.Date</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2010-01-01"</span>), </span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2012-12-31"</span>), </span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">by =</span> <span class="st">"6 months"</span>)) <span class="sc">+</span></span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="seasons" class="level2">
+<h2 class="anchored" data-anchor-id="seasons">Seasons</h2>
+<p>I also decided to look at sales by season to see if there was a difference. I decided to group seasons by the following: - Winter: December, January, February - Spring: March, April, May - Summer: June, July, August - Fall: September, October, November</p>
+<p>When looking at the plot originally for sales totals, it appeared that summer was highest and winter was lowest, which seems strange as winter should include most of the holiday shopping (though Black Friday would be considered fall). However, since the dataset is missing January 2010 and November-December 2012, it is missing a decent amount (2 months) of winter data. I then decided to look at average sales instead, where winter was the highest, lining up more with what we’d expect from the time series plots.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Plot_Date,<span class="at">y=</span>Total_Sales,<span class="at">color=</span><span class="fu">factor</span>(Year))) <span class="sc">+</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x=</span>Plot_Date,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span>Total_Sales,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha=</span><span class="fu">factor</span>(Holiday_Flag),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span><span class="fu">factor</span>(Holiday_Flag)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ),<span class="at">size=</span><span class="fl">0.75</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_alpha_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"0"</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">"1"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"2"</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2010"</span> <span class="ot">=</span> <span class="st">"#F8766D"</span>, </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2011"</span> <span class="ot">=</span> <span class="st">"#00BA38"</span>, </span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2012"</span> <span class="ot">=</span> <span class="st">"#619CFF"</span>, </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">"1"</span><span class="ot">=</span><span class="st">"purple"</span>,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"2"</span><span class="ot">=</span><span class="st">"magenta"</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">+</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">x=</span><span class="st">"Month-Day"</span>,</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">y=</span><span class="st">"Total Weekly Sales (in millions)"</span>,</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">title=</span><span class="st">"Total Weekly Sales Per Year Across All Stores With Holidays"</span>,</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">color=</span><span class="st">"Year and Holiday Flag"</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="cf">function</span>(x) <span class="fu">seq.Date</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), </span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2014-01-01"</span>), </span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">by =</span> <span class="st">"1 month"</span>),</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_labels=</span><span class="st">"%m-%d"</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="looking-at-other-factors" class="level1">
-<h1>Looking at other factors</h1>
+<section id="holidays" class="level1">
+<h1>Holidays</h1>
+<section id="adding-additional-holidays" class="level2">
+<h2 class="anchored" data-anchor-id="adding-additional-holidays">Adding additional holidays</h2>
+<p>I wondered if other holidays had an impact on sales, so I decided to add other holidays to the dataset that tend to have some shopping associated with them. I marked the holidays I added with 2 (changing my logical variable into more of an ordinal one) so I could more easily differentiate the holidays I added versus the ones that already existed in the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>longer_store_data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="fu">c</span>(<span class="st">"Unemployment"</span>, <span class="st">"CPI"</span>, <span class="st">"Fuel_Price"</span>, <span class="st">"Temperature"</span>),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"Category"</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"Value"</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(longer_store_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 11
-  Store Date       Weekly_Sales Holiday_Flag  Year Month   Day  Week Plot_Date 
-  &lt;int&gt; &lt;date&gt;            &lt;dbl&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;date&gt;    
-1     1 2010-02-05     1643691.            0  2010     2     5     6 2013-02-05
-2     1 2010-02-05     1643691.            0  2010     2     5     6 2013-02-05
-3     1 2010-02-05     1643691.            0  2010     2     5     6 2013-02-05
-4     1 2010-02-05     1643691.            0  2010     2     5     6 2013-02-05
-5     2 2010-02-05     2136989.            0  2010     2     5     6 2013-02-05
-6     2 2010-02-05     2136989.            0  2010     2     5     6 2013-02-05
-# ℹ 2 more variables: Category &lt;chr&gt;, Value &lt;dbl&gt;</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add other holidays to the store_data. </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag with "2" to differentiate from pre-existing holidays in the store_dataset</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation: dates are for end of week, not beginning of week </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (so take date and check week previous, not week after)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-09"</span>, <span class="st">"2011-05-08"</span>, <span class="st">"2012-05-13"</span>, <span class="co"># Mother's Day</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2012-06-20"</span>, <span class="st">"2012-06-19"</span>, <span class="st">"2012-06-17"</span>, <span class="co"># Father's Day</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-05-31"</span>, <span class="st">"2011-05-30"</span>, <span class="st">"2012-05-28"</span>, <span class="co"># Memorial Day</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-04-04"</span>, <span class="st">"2011-04-24"</span>, <span class="st">"2012-04-08"</span>, <span class="co"># Easter</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-10-31"</span>, <span class="st">"2011-10-31"</span>, <span class="st">"2012-10-31"</span>, <span class="co"># Halloween</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-07-04"</span>, <span class="st">"2011-07-04"</span>, <span class="st">"2012-07-04"</span>, <span class="co"># 4th of July</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2010-02-14"</span>, <span class="st">"2011-02-14"</span>, <span class="st">"2012-02-14"</span>  <span class="co"># Valentine's Day</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>determine_holiday <span class="ot">=</span> <span class="cf">function</span>(day) {</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (holiday <span class="cf">in</span> holidays) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">between</span>(<span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(holiday,<span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)<span class="sc">-</span>day), <span class="sc">-</span><span class="dv">6</span>, <span class="dv">0</span>)) {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Allows determine_holiday to take in one date at a time in the ifelse</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>determine_holiday_vectorized <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(determine_holiday)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>store_data_with_holidays <span class="ot">=</span> store_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Holiday_Flag =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag<span class="sc">==</span><span class="dv">0</span>, </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">determine_holiday_vectorized</span>(Date),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        Holiday_Flag</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="looking-at-holiday-impact" class="level2">
+<h2 class="anchored" data-anchor-id="looking-at-holiday-impact">Looking at holiday impact</h2>
+<p>I decided to remake some of the time series plots I made earlier, but point out holidays as well. One of the issues I came across is due to the the dates in the dataset being for the last day of the sale week. The way ggplot colors the graphs (as an example):</p>
+<ul>
+<li><p>Dec 20 has a holiday flag of 0, as Dec 14-20 have no holidays</p></li>
+<li><p>Dec 27 has a holiday flag of 1, since Christmas is 2 days earlier and contained in the week</p>
+<ul>
+<li>ggplot colors with a different color going forward</li>
+</ul></li>
+<li><p>Jan 3 has a holiday flag again of 0 since there’s no holiday in the previous week, so <em>then</em> ggplot changes the color back</p></li>
+</ul>
+<p>However, we want it to color previous to the date based on the holiday flag, not previous to it. Therefore, I had to add a lead variable to get the next week’s holiday flag and color off of that instead (code for lead variable below).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>longer_store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>Value,<span class="at">y=</span>Weekly_Sales,<span class="at">color=</span><span class="fu">factor</span>(Store)), <span class="at">size=</span><span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Category, <span class="at">scales=</span><span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Weekly Sales (in millions)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> store_data_with_holidays <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, Holiday_Flag) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Next_Week_Holiday =</span> <span class="fu">lead</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      Holiday_Flag, <span class="at">default =</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<p>I made a plot that color-coded weeks based on their holiday flag and a plot grouped by year with points for where each holiday occurs. Based on this, it appears that most peaks in sales occur either the week of the holiday or the week before (depending on when in the week the holiday occurred. For example, a holiday occuring on a Thursday would show sales increase the same week, whereas a holiday on a Sunday would likely show the week before). What is interesting is that there appear to be small peaks at the beginning of August and beginning of October that don’t correspond with holidays.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Unemployment =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      Unemployment <span class="sc">&lt;=</span> <span class="dv">6</span><span class="sc">~</span><span class="st">"&lt;= 6%"</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      Unemployment <span class="sc">&lt;=</span> <span class="dv">10</span><span class="sc">~</span><span class="st">"&lt;= 10%"</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default=</span><span class="st">"&gt; 10%"</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">CPI =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      CPI <span class="sc">&lt;=</span> <span class="dv">150</span> <span class="sc">~</span><span class="st">"&lt;= 150"</span>,</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>      CPI <span class="sc">&lt;=</span> <span class="dv">200</span> <span class="sc">~</span><span class="st">"&lt;= 200"</span>,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default=</span><span class="st">"&gt; 200"</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Fuel_Price =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>      Fuel_Price <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">~</span><span class="st">"&lt;= $3"</span>,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>      Fuel_Price <span class="sc">&lt;=</span> <span class="dv">4</span> <span class="sc">~</span><span class="st">"&lt;= $4"</span>,</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default=</span><span class="st">"&gt; $4"</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Temperature =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      Temperature <span class="sc">&lt;=</span> <span class="dv">40</span> <span class="sc">~</span><span class="st">"&lt;= 40 F"</span>,</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      Temperature <span class="sc">&lt;=</span> <span class="dv">75</span> <span class="sc">~</span><span class="st">"&lt;= 75 F"</span>,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default=</span><span class="st">"&gt; 75 F"</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, Weekly_Sales, Unemployment, CPI, Fuel_Price, Temperature) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Unemployment"</span>, <span class="st">"CPI"</span>, <span class="st">"Fuel_Price"</span>, <span class="st">"Temperature"</span>),</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Category"</span>,</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"Value"</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Value,<span class="at">y=</span>Weekly_Sales),<span class="at">outlier.size=</span><span class="fl">0.75</span>) <span class="sc">+</span> </span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Category, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Weekly Sales (in millions)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rounded_data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedTemp=</span><span class="fu">round</span>(Temperature,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedCPI=</span><span class="fu">round</span>(CPI,<span class="at">digits=</span><span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedFuel=</span><span class="fu">round</span>(Fuel_Price,<span class="at">digits=</span><span class="dv">1</span>),</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">RoundedUnemployment=</span><span class="fu">round</span>(Unemployment)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"RoundedTemp"</span>, <span class="st">"RoundedCPI"</span>, <span class="st">"RoundedFuel"</span>, <span class="st">"RoundedUnemployment"</span>)) {</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">=</span> rounded_data <span class="sc">%&gt;%</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="sc">!!</span><span class="fu">sym</span>(col)) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">AvgSales=</span><span class="fu">mean</span>(Weekly_Sales)) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes_string</span>(<span class="at">x=</span>col,<span class="at">y=</span><span class="st">"AvgSales"</span>)) <span class="sc">+</span> </span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>), </span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Average Sales (in millions)"</span>)</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  plots[[col]] <span class="ot">&lt;-</span> plot</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation idioms with `aes()`.
-ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plots[[<span class="st">"RoundedTemp"</span>]] <span class="sc">+</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedCPI"</span>]] <span class="sc">+</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedFuel"</span>]] <span class="sc">+</span> </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  plots[[<span class="st">"RoundedUnemployment"</span>]] <span class="sc">+</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+</section>
+<section id="looking-at-other-factors" class="level1">
+<h1>Looking at other factors</h1>
+<p>I was interested in seeing if the other variables in the dataset affected sales in any way. So I could display the plots using a facet-wrap, I did a pivot longer to have each of the variables as a column I could group on.</p>
+<p><img src="images/longer_store_data.png" class="img-fluid"></p>
+<p>As can be seen in the plots, there does not appear to be much relationship between CPI/unemployment/temperature/fuel price and weekly sales. Some things I noticed: - Stores don’t change much in terms of CPI - No matter the fuel price, weekly sales for each store remained consistent/flat - Temperature, CPI, and Unemployment appear to have a slight right skew, but there is generally not much relationship.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Temperature: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Temperature)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Temperature: -0.0638100131794695"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"CPI: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>CPI)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "CPI: -0.0726341620401763"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Unemployment: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Unemployment)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Unemployment: -0.106176089657954"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Fuel: "</span>, <span class="fu">cor</span>(store_data<span class="sc">$</span>Weekly_Sales,store_data<span class="sc">$</span>Fuel_Price)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Fuel: 0.00946378631447514"</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># corr by store</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>unemployment <span class="ot">=</span> <span class="fu">c</span>()</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">=</span> <span class="fu">c</span>()</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>fuel <span class="ot">=</span> <span class="fu">c</span>()</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>cpi <span class="ot">=</span> <span class="fu">c</span>()</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (store <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">45</span>) {</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Store<span class="sc">==</span>store) </span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  unemployment <span class="ot">=</span> <span class="fu">append</span>(unemployment, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Unemployment))</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">=</span> <span class="fu">append</span>(temp, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Temperature))</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  fuel <span class="ot">=</span> <span class="fu">append</span>(fuel, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>Fuel_Price))</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  cpi <span class="ot">=</span> <span class="fu">append</span>(cpi, <span class="fu">cor</span>(data<span class="sc">$</span>Weekly_Sales,data<span class="sc">$</span>CPI))</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>cors <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Store=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">45</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unemployment=</span>unemployment,</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Temperature=</span>temp,</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fuel_Price=</span>fuel,</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">CPI=</span>cpi</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>cors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Store Unemployment Temperature Fuel_Price   CPI
-1      1        -0.10       -0.22       0.12  0.23
-2      2         0.07       -0.30      -0.20 -0.06
-3      3        -0.23       -0.38       0.14  0.32
-4      4        -0.34       -0.23       0.21  0.35
-5      5        -0.21       -0.18       0.17  0.31
-6      6         0.04       -0.08      -0.10 -0.01
-7      7        -0.17        0.02       0.11  0.29
-8      8        -0.05       -0.31       0.03  0.12
-9      9        -0.19       -0.21       0.21  0.29
-10    10         0.13       -0.43      -0.19 -0.12
-11    11        -0.02       -0.28      -0.04  0.07
-12    12        -0.01       -0.38       0.02  0.08
-13    13        -0.17       -0.14       0.08  0.16
-14    14         0.21       -0.20      -0.35 -0.42
-15    15         0.08       -0.05      -0.19 -0.17
-16    16        -0.07        0.18       0.00  0.12
-17    17        -0.26        0.08       0.31  0.35
-18    18         0.14       -0.14      -0.28 -0.19
-19    19         0.10       -0.08      -0.19 -0.16
-20    20        -0.10       -0.26      -0.01  0.06
-21    21         0.22       -0.18      -0.14 -0.16
-22    22         0.04       -0.08      -0.07 -0.04
-23    23        -0.08        0.06       0.02  0.08
-24    24        -0.01        0.11      -0.11 -0.01
-25    25         0.00       -0.03      -0.08 -0.01
-26    26        -0.07        0.21       0.02  0.13
-27    27        -0.01        0.12      -0.23 -0.21
-28    28         0.14       -0.38      -0.14 -0.10
-29    29         0.08       -0.13      -0.09 -0.07
-30    30         0.20       -0.33      -0.43 -0.30
-31    31        -0.06       -0.26       0.11  0.13
-32    32        -0.10       -0.11       0.12  0.20
-33    33         0.10        0.02      -0.06 -0.05
-34    34         0.02       -0.28       0.01  0.12
-35    35         0.48        0.04      -0.50 -0.42
-36    36         0.83       -0.09      -0.73 -0.92
-37    37        -0.22       -0.30       0.21  0.24
-38    38        -0.79        0.03       0.70  0.81
-39    39        -0.38        0.06       0.27  0.43
-40    40        -0.11        0.09       0.03  0.11
-41    41        -0.35        0.11       0.31  0.39
-42    42        -0.36       -0.15       0.32  0.36
-43    43        -0.20        0.10      -0.34 -0.29
-44    44        -0.78        0.27       0.61  0.74
-45    45         0.00       -0.20      -0.05 -0.02</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="fu">as.matrix</span>(cors <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Store))) <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">scale=</span><span class="st">"column"</span>,<span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">Rowv =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>I also decided to divide each variable into 3 bins and create boxplots to see if there was a major difference in the median sales. While the range sizes of the middle 50% and extreme values at times differ, the medians appear to not shift across variable values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Temperatures by store</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>store_temps_grouped <span class="ot">=</span> store_data <span class="sc">%&gt;%</span> </span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Store, Month) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Mean_Temperature=</span><span class="fu">mean</span>(Temperature)) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Month_Name =</span> month.name,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Temperature =</span> <span class="fu">round</span>(Mean_Temperature, <span class="dv">2</span>)</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>store_temps <span class="ot">=</span> store_temps_grouped <span class="sc">%&gt;%</span> </span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Month) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from=</span>Month_Name,</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> Mean_Temperature</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>store_temps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 45 × 13
-# Groups:   Store [45]
-   Store January February March April   May  June  July August September October
-   &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
- 1     1    47.2     47.8  59.6  67.4  73.9  81.9  83.1   86.2      79.0    67.9
- 2     2    44.6     46.3  58.7  66.3  73.4  83.1  85.6   87.9      79.9    67.2
- 3     3    52.0     52.9  63.4  71.6  76.7  83.5  84.1   86.7      81.2    71.9
- 4     4    38.2     38.8  53.2  61.8  68.8  79.8  80.7   80.2      71.7    62.5
- 5     5    48.0     48.4  60.0  68.3  74.6  82.8  84.2   87.2      80.7    69.6
- 6     6    48.2     49.0  60.4  69.2  74.7  83.2  84.5   87.1      80.6    69.8
- 7     7    17.2     18.7  29.3  36.7  42.8  56.5  61.0   59.1      49.4    39.7
- 8     8    40.1     38.7  52.7  61.9  67.9  80.3  80.5   81.0      72.9    62.0
- 9     9    44.7     45.1  58.1  67.5  73.1  83.7  85.0   86.6      78.6    66.9
-10    10    52.8     54.2  60.4  69.3  76.9  86.8  88.5   87.5      83.7    74.7
-# ℹ 35 more rows
-# ℹ 2 more variables: November &lt;dbl&gt;, December &lt;dbl&gt;</code></pre>
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>I then decided to bin the values by rounding them and creating a histogram for each variable. When looking at the histograms, Unemployment appears to have the most relationship (a downward trend), while Temperature, Fuel Price, and CPI appear to have a bell-curve shape (larger middle, lower ends). This also matches up with the calculated correlation values. Unemployment has the highest correlation but is still very low (-0.1, very close to 0).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>store_temps_grouped <span class="sc">%&gt;%</span> </span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>Month,<span class="at">y=</span>Mean_Temperature,<span class="at">color=</span><span class="fu">factor</span>(Store))) <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Temperature: -0.0638100131794695"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CPI: -0.0726341620401763"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Unemployment: -0.106176089657954"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Fuel: 0.00946378631447514"</code></pre>
+</div>
+</div>
+<!-- ![](images/cors.png) -->
+<p>I also looked at how each variable changed for each store throughout the data. As can be seen below, all stores for temperature and fuel price have similar trends and move together throughout the data, while unemployment either stays flat or decreases depending on the store, and CPI either stays flat or increases. These trends make sense as time goes on, getting further away and recovering from the 2008 recession.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
+<p>Based on the plots, it appears that whether a week contains or is near a holiday had the most impact on sales. All stores follow similar trends and aren’t impacted much by CPI, Temperature, Unemployment, or Fuel Price.</p>
+<p>There were a few challenges I came across while working on the project. One issue is that the data is missing Jan 2010 and Nov-Dec 2012. This makes it difficult to, for example, find out what percentage of a year’s sales a particular week makes up, as I only have 52 weeks for 2011. I originally wanted to look at this to control for some stores getting more sales consistently/being larger than others. I also had to account for dates being the last day of the sales week and not before. When I was first adding in holidays (and treated the dates as if they represented the first day of the week), I thought the holidays that were already existing in the dataset were wrong because they seemed to be a week off. I also, again, had to add the lead variable for ggplot to correctly color weeks, because the dates were for the last day and not the first. Finally, I wish I had some more information on each store, such as where stores were located, population of area, distance to other Walmarts, etc. That way, I could look at whether a store has low sales because they have a low population, or if there’s just a lot of Walmarts in the area, which would spread sales out.</p>
+<p>I started to look into temperature patterns to see if I could maybe get a sense of region, and all stores have cold winters and warmer summers, suggesting that they are all in a region that at least experiences changes in seasons rather than consistent weather year-round. Many stores are similar in terms of temperatures, but one store reaches a maximum of 60 degrees during the summer, suggesting that maybe they are in the northern part of the Northeast, while another seems to be above 50 degrees the entire year, including the winter, suggesting that they might be in the southern part of the country, or west coast where temperatures tend to be warmer compared to the east coast, However, beyond this, it’s hard to tell where these stores may be.</p>
+<!-- ![](images/store_temps.png) -->
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 
 </main>
