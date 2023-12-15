@@ -1,6 +1,6 @@
 ---
 title: "Final Project"
-author: "Delaney Norman"
+author: "Zach Norman"
 date: "`r Sys.Date()`"
 output: html_document
 ---
