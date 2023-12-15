@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-12-13">
+<meta name="dcterms.date" content="2023-12-15">
 
 <title>Final Project Report</title>
 <style>
@@ -92,7 +92,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 13, 2023</p>
+      <p class="date">December 15, 2023</p>
     </div>
   </div>
   
@@ -109,12 +109,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="total-sales-data" class="level1">
 <h1>Total Sales Data</h1>
-<p>Below are the plots for weekly sales data over time, both over the course of the entire dataset and color-coded by year. There are highs and lows throughout the year, but generally sales are flat throughout the year, with the exception of the end of the year around the holidays, where there is a big increase in sales. There is no upward trend at the end of 2012 due to the dataset cutting off in October 2012. As seen in the second graph, all the years are pretty similar in trends as well, with some peaks happening in slightly different spots.</p>
+<p>Below are the plots for weekly sales data over time, both over the course of the entire dataset and color-coded by year. There are highs and lows throughout the year, but generally sales are flat throughout the year, with the exception of the end of the year around the holidays, where there is a big increase in sales. There is no upward trend at the end of 2012 due to the dataset cutting off in October 2012.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>As seen here, all the years are pretty similar in trends as well, with some peaks happening in slightly different spots. In order to correctly overlay the years (because going off of just the dates, even coloring by year, would just make a color-coded version of the graph above), I made a new column with the same month and day, but made the year for every week 2013. I then plotted with the new column in the x-axis, colored based on the original year, and changed the x-axis labels to exclude the year.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
@@ -192,7 +193,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="looking-at-holiday-impact" class="level2">
 <h2 class="anchored" data-anchor-id="looking-at-holiday-impact">Looking at holiday impact</h2>
-<p>I decided to remake some of the time series plots I made earlier, but point out holidays as well. One of the issues I came across is due to the the dates in the dataset being for the last day of the sale week. The way ggplot colors the graphs (as an example): - Dec 20 has a holiday flag of 0, as Dec 14-20 have no holidays - Dec 27 has a holiday flag of 1, since Christmas is 2 days earlier and contained in the week - ggplot colors with a different color going forward - Jan 3 has a holiday flag again of 0 since there’s no holiday in the previous week, so <em>then</em> ggplot changes the color back However, we want it to color previous to the date based on the holiday flag, not previous to it. Therefore, I had to add a lead variable to get the next week’s holiday flag and color off of that instead (code for lead variable below).</p>
+<p>I decided to remake some of the time series plots I made earlier, but point out holidays as well. One of the issues I came across is due to the the dates in the dataset being for the last day of the sale week. The way ggplot colors the graphs (as an example):</p>
+<ul>
+<li><p>Dec 20 has a holiday flag of 0, as Dec 14-20 have no holidays</p></li>
+<li><p>Dec 27 has a holiday flag of 1, since Christmas is 2 days earlier and contained in the week</p>
+<ul>
+<li>ggplot colors with a different color going forward</li>
+</ul></li>
+<li><p>Jan 3 has a holiday flag again of 0 since there’s no holiday in the previous week, so <em>then</em> ggplot changes the color back</p></li>
+</ul>
+<p>However, we want it to color previous to the date based on the holiday flag, not previous to it. Therefore, I had to add a lead variable to get the next week’s holiday flag and color off of that instead (code for lead variable below).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>holidays <span class="ot">=</span> store_data_with_holidays <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Date, Holiday_Flag) <span class="sc">%&gt;%</span> </span>
@@ -219,8 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="looking-at-other-factors" class="level1">
 <h1>Looking at other factors</h1>
 <p>I was interested in seeing if the other variables in the dataset affected sales in any way. So I could display the plots using a facet-wrap, I did a pivot longer to have each of the variables as a column I could group on.</p>
-<p>As can be seen in the plots, there does not appear to be much relationship between CPI/unemployment/temperature/fuel price and weekly sales. Some things I noticed: - Stores don’t change much in terms of CPI - No matter the fuel price, weekly sales for each store remained consistent/flat - Temperature, CPI, and Unemployment appear to have a slight right skew, but there is generally not much relationship.</p>
 <p><img src="images/longer_store_data.png" class="img-fluid"></p>
+<p>As can be seen in the plots, there does not appear to be much relationship between CPI/unemployment/temperature/fuel price and weekly sales. Some things I noticed: - Stores don’t change much in terms of CPI - No matter the fuel price, weekly sales for each store remained consistent/flat - Temperature, CPI, and Unemployment appear to have a slight right skew, but there is generally not much relationship.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
@@ -253,20 +263,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <!-- ![](images/cors.png) -->
+<p>I also looked at how each variable changed for each store throughout the data. As can be seen below, all stores for temperature and fuel price have similar trends and move together throughout the data, while unemployment either stays flat or decreases depending on the store, and CPI either stays flat or increases. These trends make sense as time goes on, getting further away and recovering from the 2008 recession.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p><img src="images/store_temps.png" class="img-fluid"></p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
+<p>Based on the plots, it appears that whether a week contains or is near a holiday had the most impact on sales. All stores follow similar trends and aren’t impacted much by CPI, Temperature, Unemployment, or Fuel Price.</p>
+<p>There were a few challenges I came across while working on the project. One issue is that the data is missing Jan 2010 and Nov-Dec 2012. This makes it difficult to, for example, find out what percentage of a year’s sales a particular week makes up, as I only have 52 weeks for 2011. I originally wanted to look at this to control for some stores getting more sales consistently/being larger than others. I also had to account for dates being the last day of the sales week and not before. When I was first adding in holidays (and treated the dates as if they represented the first day of the week), I thought the holidays that were already existing in the dataset were wrong because they seemed to be a week off. I also, again, had to add the lead variable for ggplot to correctly color weeks, because the dates were for the last day and not the first. Finally, I wish I had some more information on each store, such as where stores were located, population of area, distance to other Walmarts, etc. That way, I could look at whether a store has low sales because they have a low population, or if there’s just a lot of Walmarts in the area, which would spread sales out.</p>
+<p>I started to look into temperature patterns to see if I could maybe get a sense of region, and all stores have cold winters and warmer summers, suggesting that they are all in a region that at least experiences changes in seasons rather than consistent weather year-round. Many stores are similar in terms of temperatures, but one store reaches a maximum of 60 degrees during the summer, suggesting that maybe they are in the northern part of the Northeast, while another seems to be above 50 degrees the entire year, including the winter, suggesting that they might be in the southern part of the country, or west coast where temperatures tend to be warmer compared to the east coast, However, beyond this, it’s hard to tell where these stores may be.</p>
+<!-- ![](images/store_temps.png) -->
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="FinalProjectReport_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 
 </main>

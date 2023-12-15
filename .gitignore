@@ -1,5 +1,7 @@
-*.png
-STAT 7500 Project Proposal.pdf
+images/
+*.pdf
 Rplots.pdf
 .DS_Store
 *.DS_Store
+store_data.png
+Walmart.csv
